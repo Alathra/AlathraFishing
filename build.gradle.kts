@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.NuclearDonut47.AlathraFishing"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.0-SNAPSHOT"
 description = ""
 
 java {
@@ -21,6 +21,12 @@ repositories {
 
     maven("https://maven.enginehub.org/repo/")
 
+    maven("https://jitpack.io/") {
+        content {
+            includeGroup("com.github.milkdrinkers")
+        }
+    }
+
     mavenCentral()
     mavenLocal()
 }
@@ -31,6 +37,8 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT")
+
+    implementation("com.github.milkdrinkers:colorparser:1.0.6")
 }
 
 tasks {
@@ -67,7 +75,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the clicktpa.
         // Your clicktpa's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.19.3")
     }
 }
 
@@ -90,4 +98,9 @@ bukkit {
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD
     softDepend = listOf()
+
+    commands {
+        register("test"){
+        }
+    }
 }
