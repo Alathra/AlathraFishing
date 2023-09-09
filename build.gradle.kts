@@ -20,6 +20,8 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
 
     maven("https://maven.enginehub.org/repo/")
+    
+    maven ("https://maven.citizensnpcs.co/repo")
 
     maven("https://jitpack.io/") {
         content {
@@ -32,11 +34,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT")
+    
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
 
     implementation("com.github.milkdrinkers:colorparser:1.0.6")
 }
@@ -75,7 +79,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the clicktpa.
         // Your clicktpa's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19.3")
+        minecraftVersion("1.20.1")
     }
 }
 

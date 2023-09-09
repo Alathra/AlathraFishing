@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class AlathraFishing extends JavaPlugin {
     private CustomTools tools;
+    
     @Override
     public void onLoad() {
         tools = new CustomTools(this, getConfig().getConfigurationSection("tools"));

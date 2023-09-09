@@ -1,8 +1,6 @@
 package com.github.NuclearDonut47.AlathraFishing.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
-import com.github.milkdrinkers.colorparser.ColorParser;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
