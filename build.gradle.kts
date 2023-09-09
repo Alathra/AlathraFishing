@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
@@ -75,7 +75,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the clicktpa.
         // Your clicktpa's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19.3")
+        minecraftVersion("1.20.1")
     }
 }
 
@@ -93,7 +93,7 @@ bukkit {
     authors = listOf("NuclearDonut47")
 
     // API version (should be set for 1.13+)
-    apiVersion = "1.19"
+    apiVersion = "1.20"
 
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD

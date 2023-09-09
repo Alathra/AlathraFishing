@@ -21,7 +21,7 @@ public class CustomTools {
     private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD, Material.IRON_SHOVEL,
             Material.IRON_SHOVEL};
     private static final String[] names = {"Net", "Fishing Rod", "Trowel", "Catcher"};
-    private static final int[] modelOverrides = {1, 2, 3, 4};
+    private static final int[] modelOverrides = {0, 1, 2, 3};
     private static final int[] durabilities = {64, 64, 250, 250};
 
     private static final String defaultMessage = "Default value(s) is (are) being used.";
@@ -60,8 +60,6 @@ public class CustomTools {
 
     private void setItem(ConfigurationSection toolData, int a) {
         String baseItem = toolData.getString("item");
-
-        if (a == 1) return;
 
         if (baseItem == null) {
             getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " + defaultMessage);
