@@ -31,20 +31,22 @@ public class NetListener extends ToolUseListener {
 
     @EventHandler @SuppressWarnings("unused")
     public void castNet(PlayerInteractEvent castEvent) {
-        castEvent.getPlayer().sendMessage(new ColorParser(String.valueOf(castEvent.getHand())).build());
-
         if (castEvent.getHand() != EquipmentSlot.HAND) return;
+        // Item is in main hand
 
         if (castEvent.getItem().getType() != tools.getBaseItems()[0]) return;
-        
-        if (!castEvent.getItem().getItemMeta().hasCustomModelData()) return;
+        // Item is net base item.
 
-        if (castEvent.getItem().getItemMeta().getCustomModelData() != tools.getModelOverrides()[0]) return;
+        if (!toolCheck(0, castEvent.getItem().getItemMeta())) return;
+        // Item is net.
+
+        castEvent.getPlayer().sendMessage(new ColorParser("Item is net.").build());
 
         if (castEvent.getPlayer().getTargetBlock(null, 16).getType() != Material.WATER) {
             castEvent.setCancelled(true);
             return;
         }
+        // Cancel vanilla action and stop if player is not looking at water.
 
         Component castingMessage = new ColorParser("You are now casting your net.").build();
 

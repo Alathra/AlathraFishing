@@ -97,7 +97,7 @@ bukkit {
     authors = listOf("NuclearDonut47")
 
     // API version (should be set for 1.13+)
-    apiVersion = "1.19"
+    apiVersion = "1.20"
 
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD

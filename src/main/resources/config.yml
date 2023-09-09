@@ -7,19 +7,21 @@
 tools:
   net:
     name: "Net" # Default "Net"
-    model: 47000 # Default 1
+    item: "FISHING_ROD"
+    model: 47000 # Default 0
     durability: 4 # Default 64
   fishing_rod:
-    name: "Fishing Rod" # Default "Fishing Rod"
-    model: 47001 # Default 2
+    name: "Alathran Fishing Rod" # Default "Fishing Rod"
+    item: "FISHING_ROD"
+    model: 47001 # Default 1
     durability: 4 # Default 64
   trowel:
     name: "Trowel" # Default "Trowel"
     item: "IRON_AXE" # Default "IRON_SHOVEL"
-    model: 47050 # Default 3
+    model: 47050 # Default 2
     durability: 4 # Default 250
   catcher:
     name: "Test" # Default "Catcher"
     item: "IRON_SHOVEL" # Default "IRON_SHOVEL"
-    model: 47051 # Default 4
+    model: 47051 # Default 3
     durability: 4 # Default 250
