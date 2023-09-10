@@ -2,6 +2,7 @@ package com.github.NuclearDonut47.AlathraFishing;
 
 import com.github.NuclearDonut47.AlathraFishing.tool_listeners.NetListener;
 import com.github.NuclearDonut47.AlathraFishing.tool_listeners.ToolUseListener;
+import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.CitizensPlugin;
@@ -63,6 +64,7 @@ public class AlathraFishing extends JavaPlugin {
     		Bukkit.getServer().getPluginManager().registerEvents((Listener) new CitizensRightClickNPCListener(), (Plugin) this);
     		new NPCUUIDCommands(this);
     	}
+    	BiomeUtil.init();
     }
 
     @Override

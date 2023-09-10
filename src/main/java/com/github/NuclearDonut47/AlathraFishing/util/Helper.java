@@ -1,7 +1,8 @@
-package com.github.NuclearDonut47.AlathraFishing;
+package com.github.NuclearDonut47.AlathraFishing.util;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
+@SuppressWarnings("deprecation")
 public class Helper {
 	
 	public static String chatLabel() {

@@ -43,10 +43,14 @@ dependencies {
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
         exclude(group = "*", module = "*")
     }
+    
+    compileOnly(files("libs/RTUBiomeLib-1.5.2.jar"))
 
     implementation("com.github.milkdrinkers:colorparser:2.0.0") {
         exclude("net.kyori")
     }
+    
+    
 }
 
 tasks {
@@ -110,6 +114,7 @@ bukkit {
 
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD
+    depend = listOf("RTUBiomeLib")
     softDepend = listOf("Citizens")
 
     commands {

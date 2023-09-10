@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.Helper;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
+import com.github.NuclearDonut47.AlathraFishing.util.Helper;
 
 public class AlathraFishingCommands implements CommandExecutor {
 
