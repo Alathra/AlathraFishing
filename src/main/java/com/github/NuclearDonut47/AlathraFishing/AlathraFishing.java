@@ -14,9 +14,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.NuclearDonut47.AlathraFishing.commands.AlathraFishingCommands;
 import com.github.NuclearDonut47.AlathraFishing.commands.TestCommand;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
-import com.github.NuclearDonut47.AlathraFishing.hooks.CitizensRightClickNPCListener;
+import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.CitizensRightClickNPCListener;
+import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.NPCUUIDCommands;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 
 import java.util.ArrayList;
@@ -42,13 +44,6 @@ public class AlathraFishing extends JavaPlugin {
         for (ToolUseListener listener: toolUseListeners) {
             listener.registerListener();
         }
-        
-        // Check if the server us running Citizens, init citizens listener(s) if enabled
-    	if (Bukkit.getServer().getPluginManager().getPlugin("Citizens") != null)  {
-    		Bukkit.getLogger().info("[" + this.getName() + "] Citizens detected! Enabling support...");
-    		Bukkit.getServer().getPluginManager().registerEvents((Listener) new CitizensRightClickNPCListener(), (Plugin) this);	
-    	}
-    	
     }
     
     private void initCommands() {
@@ -57,22 +52,28 @@ public class AlathraFishing extends JavaPlugin {
         if (testCommand != null) {
             testCommand.setExecutor(new TestCommand(tools));
         }
+        
+        new AlathraFishingCommands(this);
     }
     
-    @Override
-    public void onLoad() {
-        tools = new CustomTools(this, getConfig().getConfigurationSection("tools"));
+    private void initHooks() {
+    	// Check if the server us running Citizens, init citizens related classes
+    	if (Bukkit.getServer().getPluginManager().getPlugin("Citizens") != null)  {
+    		Bukkit.getLogger().info("[" + this.getName() + "] Citizens detected! Enabling support...");
+    		Bukkit.getServer().getPluginManager().registerEvents((Listener) new CitizensRightClickNPCListener(), (Plugin) this);
+    		new NPCUUIDCommands(this);
+    	}
     }
-    
 
     @Override
     public void onEnable() {
     	
     	instance = this;
-    	
     	initConfig();
+    	tools = new CustomTools(this, Config.toolsConfigSection);
         initListeners();
         initCommands();
+        initHooks();
     }
     
     public static AlathraFishing getInstance() {

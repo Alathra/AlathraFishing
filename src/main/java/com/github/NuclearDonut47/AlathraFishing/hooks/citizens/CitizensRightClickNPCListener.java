@@ -1,4 +1,4 @@
-package com.github.NuclearDonut47.AlathraFishing.hooks;
+package com.github.NuclearDonut47.AlathraFishing.hooks.citizens;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -14,8 +14,7 @@ public class CitizensRightClickNPCListener implements Listener {
 	@EventHandler
 	public static void onNPCRightClick(NPCRightClickEvent e) {
 		NPC npc	= e.getNPC();
-		Bukkit.broadcastMessage(npc.getUniqueId().toString());
-		if (npc.getUniqueId().equals(Config.fishermanNPCUUID)) {
+		if (npc.getUniqueId().toString().contentEquals(Config.fishermanNPCUUID.toString())) {
 			Bukkit.broadcastMessage("Fisherman NPC Detected");
 		}
 	}

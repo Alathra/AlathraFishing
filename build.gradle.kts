@@ -110,5 +110,7 @@ bukkit {
         }
         register("alathrafishing"){
         }
+        register("npcuuid"){
+        }
     }
 }
