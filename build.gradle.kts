@@ -21,7 +21,7 @@ repositories {
 
     maven("https://maven.enginehub.org/repo/")
     
-    maven ("https://maven.citizensnpcs.co/repo")
+    maven ("https://maven.citizensnpcs.co/repo") 
 
     maven("https://jitpack.io/") {
         content {
@@ -40,7 +40,9 @@ dependencies {
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT")
     
-    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
+        exclude(group = "*", module = "*")
+    }
 
     implementation("com.github.milkdrinkers:colorparser:1.0.6")
 }
@@ -101,10 +103,12 @@ bukkit {
 
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD
-    softDepend = listOf()
+    softDepend = listOf("Citizens")
 
     commands {
         register("test"){
+        }
+        register("alathrafishing"){
         }
     }
 }

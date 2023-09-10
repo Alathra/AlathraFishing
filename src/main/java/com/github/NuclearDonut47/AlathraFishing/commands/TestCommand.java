@@ -1,4 +1,4 @@
-package com.github.NuclearDonut47.AlathraFishing;
+package com.github.NuclearDonut47.AlathraFishing.commands;
 
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import org.bukkit.command.Command;
