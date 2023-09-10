@@ -1,11 +1,9 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
-
 plugins {
     `java-library`
 
-    id("com.github.johnrengelman.shadow") version "8.1.1" // Shades and relocates dependencies into our clicktpa jar. See https://imperceptiblethoughts.com/shadow/introduction/
+    id("com.github.johnrengelman.shadow") version "8.1.1" // Shades and relocates dependencies, See https://imperceptiblethoughts.com/shadow/introduction/
     id("xyz.jpenilla.run-paper") version "2.1.0" // Adds runServer and runMojangMappedServer tasks for testing
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3" // Automatic plugin.yml generation
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0" // Automatic plugin.yml generation
 }
 
 group = "com.github.NuclearDonut47.AlathraFishing"
@@ -17,32 +15,38 @@ java {
 }
 
 repositories {
+    mavenCentral()
+
     maven("https://papermc.io/repo/repository/maven-public/")
 
     maven("https://maven.enginehub.org/repo/")
     
-    maven ("https://maven.citizensnpcs.co/repo")
+    maven("https://maven.citizensnpcs.co/repo")
 
     maven("https://jitpack.io/") {
         content {
             includeGroup("com.github.milkdrinkers")
         }
     }
-
-    mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
+    compileOnly("org.jetbrains:annotations:24.0.1")
+    annotationProcessor("org.jetbrains:annotations:24.0.1")
+    
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT")
     
-    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
+    compileOnly("net.citizensnpcs:citizens-main:2.0.32-SNAPSHOT") {
+        exclude("*", "*")
+    }
 
-    implementation("com.github.milkdrinkers:colorparser:1.0.6")
+    implementation("com.github.milkdrinkers:colorparser:2.0.0") {
+        exclude("net.kyori")
+    }
 }
 
 tasks {
@@ -56,7 +60,7 @@ tasks {
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
         options.release.set(17)
-        options.compilerArgs.add("-Xlint:-deprecation")
+        options.compilerArgs.addAll(arrayListOf("-Xlint:all", "-Xlint:-processing", "-Xdiags:verbose"))
     }
 
     processResources {
@@ -80,6 +84,11 @@ tasks {
         // This is the only required configuration besides applying the clicktpa.
         // Your clicktpa's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.20.1")
+
+        // IntelliJ IDEA debugger setup: https://docs.papermc.io/paper/dev/debugging#using-a-remote-debugger
+        jvmArgs("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005")
+        systemProperty("terminal.jline", false)
+        systemProperty("terminal.ansi", true)
     }
 }
 

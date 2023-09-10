@@ -59,14 +59,14 @@ public class CustomTools {
     }
 
     private void setItem(ConfigurationSection toolData, int a) {
-        String baseItem = toolData.getString("item");
+        final String baseItem = toolData.getString("item");
 
         if (baseItem == null) {
             getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " + defaultMessage);
             return;
         }
 
-        Material material = Material.getMaterial(baseItem);
+        final Material material = Material.getMaterial(baseItem);
 
         if (material == null) {
             getServer().getLogger().info("value at " + defaultToolPaths[a] +
@@ -113,7 +113,7 @@ public class CustomTools {
     }
 
     private void setDurabilities(ConfigurationSection toolData, int a) {
-        int durability = toolData.getInt("durability");
+        final int durability = toolData.getInt("durability");
 
         if (durability <= 0) {
             getServer().getLogger().info(defaultToolPaths[a] +".durability section is missing from config.yml." +
@@ -150,7 +150,7 @@ public class CustomTools {
         ItemStack customItem = new ItemStack(baseItems[toolVal]);
         Damageable damageable = (Damageable) customItem.getItemMeta();
 
-        Component name = new ColorParser(names[toolVal]).build();
+        Component name = ColorParser.of(names[toolVal]).build();
 
         NamespacedKey key = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "durability");
         NamespacedKey key2 = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "max_durability");

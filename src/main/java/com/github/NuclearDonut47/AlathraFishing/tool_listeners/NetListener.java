@@ -3,7 +3,10 @@ package com.github.NuclearDonut47.AlathraFishing.tool_listeners;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -14,14 +17,12 @@ public class NetListener extends ToolUseListener {
         super(pluginInstance, toolsInstance);
     }
 
-    // Casting:
-    // Cancel normal fishing                                check
-    // Check if Player is Looking at Water                  check
-    // Print message that player is net fishing             check
-
     // Fishing:
-    // Set Bobber Invisible (Create fishing effect without bobber, deleting it instead)
-    // Disable Enchantments                                 unimportant for prerelease
+    // Create Fishing Effect
+    // Set up Timer with Random Time
+    // After Time Elapses, Create SPLASHING Effects for Amount of Time
+    // (If I have to go all the way, may as well make this unique).
+    // Give Time Window to Reel In Haul
 
     // Reeling:
     // Cancel reel-in message
@@ -31,8 +32,13 @@ public class NetListener extends ToolUseListener {
 
     @EventHandler @SuppressWarnings("unused")
     public void castNet(PlayerInteractEvent castEvent) {
-        if (castEvent.getHand() != EquipmentSlot.HAND) return;
-        // Item is in main hand
+        if (!castEvent.getHand().equals(EquipmentSlot.HAND)) return;
+        // Item is in main hand.
+
+        if (castEvent.getAction().isLeftClick()) return;
+        // Action was right-click.
+        // API is broken. Listener will trip twice, once for right-click, once for left-click.
+        // This only happens for right-clicking. Left-clicking will
 
         if (castEvent.getItem().getType() != tools.getBaseItems()[0]) return;
         // Item is net base item.
@@ -40,16 +46,23 @@ public class NetListener extends ToolUseListener {
         if (!toolCheck(0, castEvent.getItem().getItemMeta())) return;
         // Item is net.
 
-        castEvent.getPlayer().sendMessage(new ColorParser("Item is net.").build());
+        castEvent.setCancelled(true);
+        // Cancel vanilla action.
 
-        if (castEvent.getPlayer().getTargetBlock(null, 16).getType() != Material.WATER) {
-            castEvent.setCancelled(true);
-            return;
-        }
-        // Cancel vanilla action and stop if player is not looking at water.
+        Player player = castEvent.getPlayer();
 
-        Component castingMessage = new ColorParser("You are now casting your net.").build();
+        if (player.getTargetBlock(null, 16).getType() != Material.WATER) return;
+        // Stop doing stuff if player is not looking at water.
 
-        castEvent.getPlayer().sendMessage(castingMessage);
+        Component castingMessage = ColorParser.of("You are now casting your net.").build();
+
+        player.sendMessage(castingMessage);
+        // Tells player they are casting their net before fishing hook entity is deleted.
+
+        Location nettingArea = player.getTargetBlock(null, 16).getLocation();
+
+        player.sendMessage(ColorParser.of(nettingArea.toString()).build());
+
+        player.spawnParticle(Particle.SONIC_BOOM, nettingArea, 5);
     }
 }
