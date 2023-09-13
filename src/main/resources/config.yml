@@ -29,7 +29,7 @@ tools:
     item: "IRON_SHOVEL" # Default "IRON_SHOVEL"
     model: 47051 # Default 3
     durability: 4 # Default 250
-    
+
 # Optional Hooks
 
 # The UUID associated with the citizens NPC. Ignored if citizens is not enabled.
