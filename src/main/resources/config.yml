@@ -9,7 +9,7 @@ config-verison: 1
 # The items used for tools may only be items with nonzero durability.
 
 tools:
-  net:
+  net: # As a general note, enchantments will not work for this item.
     name: "Net" # Default "Net"
     item: "FISHING_ROD"
     model: 47000 # Default 0

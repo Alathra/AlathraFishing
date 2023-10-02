@@ -1,6 +1,8 @@
-package com.github.NuclearDonut47.AlathraFishing.tool_listeners;
+package com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners;
 
+import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -9,41 +11,49 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
+import java.util.Set;
+
 public abstract class ToolUseListener implements Listener {
-    private final Plugin plugin;
-    protected CustomTools tools;
+    protected final AlathraFishing plugin;
+    protected final CustomTools tools;
 
     // Initialize
-    public ToolUseListener(Plugin pluginInstance, CustomTools toolsInstance) {
+    public ToolUseListener(AlathraFishing pluginInstance, CustomTools toolsInstance) {
         plugin = pluginInstance;
         tools = toolsInstance;
     }
 
-    public boolean toolCheck(int index, ItemMeta item) {
-        if (item.hasCustomModelData()) return tools.getModelOverrides()[index] == item.getCustomModelData();
+    public boolean toolCheck(int index, ItemStack item) {
+        if (item == null) return false;
+
+        if (item.getType() != tools.getBaseItems()[0]) return false;
+
+        if (item.getItemMeta().hasCustomModelData()) return tools.getModelOverrides()[index] == item.getItemMeta().getCustomModelData();
         // If item has customModelData return true if match.
 
         return tools.getModelOverrides()[index] == 0;
         // Model has no customModelData. Return true if custom tool customModelData is 0.
     }
 
-    public ItemStack toolUse(NamespacedKey durKey, NamespacedKey maxDurKey, ItemStack item) {
+    public ItemMeta toolUse(NamespacedKey durKey, NamespacedKey maxKey, ItemStack item) {
         Damageable damageable = (Damageable) item.getItemMeta();
 
         int durability = damageable.getPersistentDataContainer().get(durKey, PersistentDataType.INTEGER);
-        int maxDurability = damageable.getPersistentDataContainer().get(maxDurKey, PersistentDataType.INTEGER);
+        int maxDurability = damageable.getPersistentDataContainer().get(maxKey, PersistentDataType.INTEGER);
 
         durability--;
-        int damage = (int) (1 - ((double) durability / maxDurability)) * item.getType().getMaxDurability();
 
         if (durability == 0) {
             return null;
         }
 
+        int damage = (int) ((1 - ((double) durability / maxDurability)) * item.getType().getMaxDurability());
+
         damageable.setDamage(damage);
         damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durability);
 
-        return item;
+        return damageable;
     }
 
     /*

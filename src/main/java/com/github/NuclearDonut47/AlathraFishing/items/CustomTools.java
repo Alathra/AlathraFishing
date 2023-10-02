@@ -17,7 +17,6 @@ import org.bukkit.plugin.Plugin;
 public class CustomTools {
     private static Plugin plugin;
     private static final String[] defaultToolPaths = {"net", "fishing_rod", "trowel", "catcher"};
-
     private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD, Material.IRON_SHOVEL,
             Material.IRON_SHOVEL};
     private static final String[] names = {"Net", "Fishing Rod", "Trowel", "Catcher"};
@@ -132,6 +131,10 @@ public class CustomTools {
         return modelOverrides;
     }
 
+    public String[] getDefaultToolPaths() {
+        return defaultToolPaths;
+    }
+
     public ItemStack getTool(String tool) {
         int toolVal = -1;
 
@@ -152,13 +155,13 @@ public class CustomTools {
 
         Component name = ColorParser.of(names[toolVal]).build();
 
-        NamespacedKey key = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "durability");
-        NamespacedKey key2 = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "max_durability");
+        NamespacedKey durKey= new NamespacedKey(plugin, defaultToolPaths[toolVal] + "_durability");
+        NamespacedKey maxKey = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "_max_durability");
 
         damageable.displayName(name);
         damageable.setCustomModelData(modelOverrides[toolVal]);
-        damageable.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, durabilities[toolVal]);
-        damageable.getPersistentDataContainer().set(key2, PersistentDataType.INTEGER, durabilities[toolVal]);
+        damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durabilities[toolVal]);
+        damageable.getPersistentDataContainer().set(maxKey, PersistentDataType.INTEGER, durabilities[toolVal]);
 
         customItem.setItemMeta(damageable);
 

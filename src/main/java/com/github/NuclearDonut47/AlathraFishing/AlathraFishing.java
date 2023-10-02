@@ -1,19 +1,14 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
-import com.github.NuclearDonut47.AlathraFishing.tool_listeners.NetListener;
-import com.github.NuclearDonut47.AlathraFishing.tool_listeners.ToolUseListener;
+import com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners.NetListener;
+import com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners.ToolUseListener;
 import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
-
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.CitizensPlugin;
-import net.citizensnpcs.api.npc.NPC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.NuclearDonut47.AlathraFishing.commands.AlathraFishingCommands;
 import com.github.NuclearDonut47.AlathraFishing.commands.TestCommand;
@@ -26,9 +21,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class AlathraFishing extends JavaPlugin {
-	
     private static AlathraFishing instance;
-    
     private CustomTools tools;
     
     private void initConfig() {

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.NuclearDonut47.AlathraFishing"
-version = "0.0.0-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 description = ""
 
 java {
@@ -108,14 +108,14 @@ bukkit {
     description =
             "${project.description}" // A short description of your clicktpa and what it does. This will be shown in the clicktpa info commands.
     authors = listOf("NuclearDonut47")
+    contributors = listOf("ShermansWorld", "darksaid98")
 
     // API version (should be set for 1.13+)
     apiVersion = "1.20"
 
     // Misc properties from clicktpa.yml (optional)
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD // STARTUP or POSTWORLD
-    depend = listOf("RTUBiomeLib")
-    softDepend = listOf("Citizens")
+    softDepend = listOf("Citizens", "RTUBiomeLib")
 
     commands {
         register("test"){
