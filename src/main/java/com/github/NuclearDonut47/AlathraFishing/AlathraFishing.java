@@ -30,11 +30,10 @@ public class AlathraFishing extends JavaPlugin {
     }
     
     private void initListeners() {
-    	
-    	// Init tool use listeners
     	ArrayList<ToolUseListener> toolUseListeners = new ArrayList<>();
-        ToolUseListener netListener = new NetListener(this, tools);
-        toolUseListeners.add(netListener);
+
+        toolUseListeners.add(new NetListener(this, tools));
+
         for (ToolUseListener listener: toolUseListeners) {
             listener.registerListener();
         }
@@ -62,7 +61,6 @@ public class AlathraFishing extends JavaPlugin {
 
     @Override
     public void onEnable() {
-    	
     	instance = this;
     	initConfig();
     	tools = new CustomTools(this, Config.toolsConfigSection);

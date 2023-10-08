@@ -16,12 +16,11 @@ import org.bukkit.plugin.Plugin;
 
 public class CustomTools {
     private static Plugin plugin;
-    private static final String[] defaultToolPaths = {"net", "fishing_rod", "trowel", "catcher"};
-    private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD, Material.IRON_SHOVEL,
-            Material.IRON_SHOVEL};
-    private static final String[] names = {"Net", "Fishing Rod", "Trowel", "Catcher"};
-    private static final int[] modelOverrides = {0, 1, 2, 3};
-    private static final int[] durabilities = {64, 64, 250, 250};
+    private static final String[] defaultToolPaths = {"net", "fishing_rod"};
+    private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD};
+    private static final String[] names = {"Net", "Fishing Rod"};
+    private static final int[] modelOverrides = {1, 0};
+    private static final int[] durabilities = {64, 64};
 
     private static final String defaultMessage = "Default value(s) is (are) being used.";
 
@@ -35,7 +34,8 @@ public class CustomTools {
 
         for (int a = 0; a < defaultToolPaths.length; a++) {
             if (!toolsSection.contains(defaultToolPaths[a])) {
-                getServer().getLogger().info(defaultToolPaths[a] + " section is missing from tools section in config.yml. " +
+                getServer().getLogger().info(defaultToolPaths[a] +
+                        " section is missing from tools section in config.yml. " +
                         defaultMessage);
                 continue;
             }
@@ -43,7 +43,8 @@ public class CustomTools {
             ConfigurationSection toolData = toolsSection.getConfigurationSection(defaultToolPaths[a]);
 
             if (toolData == null) {
-                getServer().getLogger().info(defaultToolPaths[a] + " section is missing from tools section in config.yml. " +
+                getServer().getLogger().info(defaultToolPaths[a] +
+                        " section is missing from tools section in config.yml. " +
                         defaultMessage);
                 continue;
             }
@@ -61,7 +62,8 @@ public class CustomTools {
         final String baseItem = toolData.getString("item");
 
         if (baseItem == null) {
-            getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " + defaultMessage);
+            getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. "
+                    + defaultMessage);
             return;
         }
 
@@ -69,7 +71,7 @@ public class CustomTools {
 
         if (material == null) {
             getServer().getLogger().info("value at " + defaultToolPaths[a] +
-                    ".item in config.yml is not a valid Material Enum" + defaultMessage);
+                    ".item in config.yml is not a valid Material enum. " + defaultMessage);
             return;
         }
 
@@ -86,7 +88,8 @@ public class CustomTools {
         String name = toolData.getString("name");
 
         if (name == null) {
-            getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " + defaultMessage);
+            getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " +
+                    defaultMessage);
             return;
         }
 
@@ -115,8 +118,8 @@ public class CustomTools {
         final int durability = toolData.getInt("durability");
 
         if (durability <= 0) {
-            getServer().getLogger().info(defaultToolPaths[a] +".durability section is missing from config.yml." +
-                    defaultMessage);
+            getServer().getLogger().info(defaultToolPaths[a] +
+                    ".durability section is either 0 or missing from config.yml." + defaultMessage);
             return;
         }
 

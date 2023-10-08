@@ -16,8 +16,6 @@ public class TestCommand implements CommandExecutor {
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         Player player = (Player) sender;
-        player.getInventory().addItem(tools.getTool("trowel"));
-        player.getInventory().addItem(tools.getTool("catcher"));
         player.getInventory().addItem(tools.getTool("net"));
         return true;
     }

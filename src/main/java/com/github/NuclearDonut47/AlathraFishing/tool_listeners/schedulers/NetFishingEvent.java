@@ -1,13 +1,13 @@
 package com.github.NuclearDonut47.AlathraFishing.tool_listeners.schedulers;
 
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners.NetListener;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ public final class NetFishingEvent extends BukkitRunnable {
     private final Component timeoutMessage = ColorParser.of("The fish got away...").build();
     private boolean fishCatchable;
     private boolean preparationPhase;
+    private boolean cobwebsPresent;
     private final int slot;
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
@@ -57,6 +58,7 @@ public final class NetFishingEvent extends BukkitRunnable {
         count = 0;
         fishCatchable = false;
         preparationPhase = true;
+        cobwebsPresent = false;
 
         slot = player.getInventory().getHeldItemSlot();
     }
@@ -76,19 +78,8 @@ public final class NetFishingEvent extends BukkitRunnable {
         }
     }
 
-    /*
-    private boolean checkItem() {
-        if (player.getInventory().getItemInMainHand().getType() != netListener.getTools().getBaseItems()[0]) return false;
-
-        if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelData()) return false;
-
-        return player.getInventory().getItemInMainHand().getItemMeta().getCustomModelData() == netListener.getTools().getModelOverrides()[0];
-    }
-    */
-
     private void checkCancelConditions() {
         if (player.getInventory().getHeldItemSlot() != slot) {
-            Bukkit.getServer().getLogger().info("check item failure");
             player.getInventory().setItem(slot, netListener.cancelEvent(this,
                     player.getInventory().getItem(slot)));
             return;
@@ -103,17 +94,43 @@ public final class NetFishingEvent extends BukkitRunnable {
         if (count < waitTime) return;
 
         if (count == waitTime) {
-            particleSpawner(Particle.BUBBLE_COLUMN_UP, 3);
+            particleSpawner(Particle.WATER_BUBBLE, 5);
             fishCatchable = true;
         }
 
-        if (count < (waitTime + 60)) particleSpawner(Particle.BUBBLE_COLUMN_UP, 5);
+        if (count < (waitTime + 60)) particleSpawner(Particle.WATER_BUBBLE, 5);
 
         if (count >= (waitTime + 60)) {
             count = 0;
             fishCatchable = false;
             player.sendMessage(timeoutMessage);
         }
+    }
+
+    private boolean invalidNetBlocksCheck(Location location) {
+        if (Math.abs((location.getX() - nettingLocation.getX())) > 1) return true;
+
+        return (Math.abs((location.getZ() - nettingLocation.getZ())) > 1);
+    }
+
+    private void spawnCobwebs() {
+        for (Location location : nettingArea) {
+            if (invalidNetBlocksCheck(location)) continue;
+
+            player.sendBlockChange(location, Material.COBWEB.createBlockData());
+        }
+
+        cobwebsPresent = true;
+    }
+
+    public void removeCobwebs() {
+        for (Location location : nettingArea) {
+            if (invalidNetBlocksCheck(location)) continue;
+
+            player.sendBlockChange(location, Material.AIR.createBlockData());
+        }
+
+        cobwebsPresent = false;
     }
 
     @Override
@@ -131,7 +148,12 @@ public final class NetFishingEvent extends BukkitRunnable {
 
         if (count > stopCount) return;
 
-        if (count == stopCount) player.playSound(player, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
+        if (count + 10 == stopCount) spawnCobwebs();
+
+        if (count == stopCount) {
+            removeCobwebs();
+            player.playSound(player, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
+        }
 
         count++;
     }
@@ -154,6 +176,10 @@ public final class NetFishingEvent extends BukkitRunnable {
 
     public boolean getPreparationPhase() {
         return preparationPhase;
+    }
+
+    public boolean getCobwebsPresent() {
+        return cobwebsPresent;
     }
 
     public void leavePreparationPhase() {

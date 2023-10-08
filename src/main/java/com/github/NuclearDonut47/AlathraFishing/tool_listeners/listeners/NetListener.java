@@ -4,7 +4,6 @@ import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.tool_listeners.schedulers.NetFishingEvent;
 import com.github.milkdrinkers.colorparser.ColorParser;
-import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,19 +20,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 
-// Failing restarts net fishing.
-
 public class NetListener extends ToolUseListener {
     private final Component prepareMessage = ColorParser.of("You look at the water and prepare to cast your net.").build();
     private final Component cancelMessage = ColorParser.of("You look away from the water.").build();
-    private final Component castMessage = ColorParser.of("You cast your net.").build();
+    private final Component castMessage = ColorParser.of("You cast your net. Right-click again to pull it in!").build();
     private final Component failMessage = ColorParser.of("Your net came up empty.").build();
     private final ArrayList<NetFishingEvent> activeNetTasks = new ArrayList<>();
 
@@ -53,49 +48,38 @@ public class NetListener extends ToolUseListener {
 
     private boolean correctEventCheck(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return false;
-        // return if event is not using main hand
 
         if (event.getAction().isLeftClick()) return false;
-        // return if event is not right click
         // API is broken. Listener will trip twice, once for right-click, once for left-click.
-        // This only happens for right-clicking. Left-clicking will
+        // This only happens for right-clicking.
+        // Left-clicking will trip event for two left-clicks.
 
         return toolCheck(0, event.getItem());
-        // Item is net.
     }
 
     private void netPrepare(PlayerInteractEvent prepareEvent) {
         Player player = prepareEvent.getPlayer();
 
         if (player.getTargetBlock(null, 16).getType() != Material.WATER) return;
-        // Stop doing stuff if player is not looking at water.
 
         player.sendMessage(prepareMessage);
-        // Tells player they are casting their net before fishing hook entity is deleted.
 
         Location nettingLocation = player.getTargetBlock(null, 16).getLocation();
 
         nettingLocation.add(0.5, 1.0, 0.5);
-        // Get location to watch for fishing.
 
         NetFishingEvent netFishingEvent = new NetFishingEvent(this, player, nettingLocation);
 
         netFishingEvent.runTaskTimer(plugin, 1, 1);
-        // Begin net fishing
 
         activeNetTasks.add(netFishingEvent);
-        // Add net fishing task to active net fishing tasks.
-
-        Bukkit.getServer().getLogger().info("end of prep listener");
     }
 
     private void netCast(PlayerInteractEvent castEvent, NetFishingEvent netFishingEvent) {
-        Bukkit.getServer().getLogger().info("cast event passes");
-
         netFishingEvent.leavePreparationPhase();
         castEvent.getPlayer().sendMessage(castMessage);
 
-        castEvent.getPlayer().playSound(castEvent.getPlayer(), Sound.ENTITY_FISHING_BOBBER_THROW, 1.0f, 1.0f);
+        castEvent.getPlayer().playSound(castEvent.getPlayer(), Sound.ENTITY_EGG_THROW, 1.0f, 1.0f);
     }
 
     public ItemStack damageTool(ItemStack usedItem, Player player) {
@@ -127,15 +111,25 @@ public class NetListener extends ToolUseListener {
         return damageTool(item, existingTask.getPlayer());
     }
 
-    private void netReel(PlayerInteractEvent reelEvent, NetFishingEvent netFishingEvent) {
-        Bukkit.getServer().getLogger().info("reel event passes");
+    private void netPull(PlayerInteractEvent pullEvent, NetFishingEvent netFishingEvent) {
+        if (netFishingEvent.getCobwebsPresent()) {
+            netFishingEvent.removeCobwebs();
+            return; // Early return because API is broken here, too.
+            // PlayerInteractEvent listener happens an erroneous extra time when
+            // the cobwebs are removed in the same tick.
+            // By not cancelling until the cobwebs were already removed, the prepare cast doesn't run again.
+            // Using blockdata vs blocks has no effect on this (this plugin uses blockstates right now, anyway).
+            // As such, this is likely the most elegant solution.
+        }
 
-        reelEvent.getPlayer().getInventory().setItemInMainHand(cancelEvent(netFishingEvent, reelEvent.getItem()));
+        pullEvent.getPlayer().getInventory().setItemInMainHand(cancelEvent(netFishingEvent, pullEvent.getItem()));
 
         if (netFishingEvent.isFishCatchable()) {
             Location nettingLocation = netFishingEvent.getNettingLocation();
-            Location playerLocation = reelEvent.getPlayer().getLocation();
+            Location playerLocation = pullEvent.getPlayer().getLocation();
             ItemStack reward = new ItemStack(Material.ENCHANTED_BOOK);
+
+            playerLocation.add(0, 1.5, 0);
 
             ItemMeta rewardMeta = reward.getItemMeta();
 
@@ -143,17 +137,17 @@ public class NetListener extends ToolUseListener {
 
             reward.setItemMeta(rewardMeta);
 
-            Item rewardDrop = reelEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
+            Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
 
-            Vector velocity = new Vector((playerLocation.getX() - nettingLocation.getX()) / 20,
-                    (8 * (playerLocation.getY() - nettingLocation.getY()) / 20),
-                    (8 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
+            Vector velocity = new Vector(3 * ((playerLocation.getX() - nettingLocation.getX()) / 20),
+                    (3 * (playerLocation.getY() - nettingLocation.getY()) / 20),
+                    (3 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
 
             rewardDrop.setVelocity(velocity);
             return;
         }
 
-        reelEvent.getPlayer().sendMessage(failMessage);
+        pullEvent.getPlayer().sendMessage(failMessage);
     }
 
     @EventHandler @SuppressWarnings("unused")
@@ -174,7 +168,7 @@ public class NetListener extends ToolUseListener {
             return;
         }
 
-        netReel(netEvent, existingTask);
+        netPull(netEvent, existingTask);
     }
 
     @EventHandler @SuppressWarnings("unused")
