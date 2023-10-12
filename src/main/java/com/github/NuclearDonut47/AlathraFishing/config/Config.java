@@ -8,37 +8,40 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
 
-public class Config {
-	
-	// config
-	private static FileConfiguration config;
-	
-	// config verison
-	// default should be up-to-date version
-	public static int configVersion = 1; // default = up-to-date version
-	
-	public static ConfigurationSection toolsConfigSection;
-	public static UUID fishermanNPCUUID;
-	public static String packExtension;
-	
-	public static void initConfigVals() {
-		
-		config = AlathraFishing.getInstance().getConfig();
+public final class Config {
+	private static AlathraFishing plugin;
+	private static ConfigurationSection toolsSection;
+	private static ConfigurationSection vanillaSection;
+	private static UUID fishermanNPCUUID;
+	private static String packExtension;
+
+	public Config(AlathraFishing pluginInstance, FileConfiguration config) {
+		plugin = pluginInstance;
+		toolsSection = config.getConfigurationSection("tools");
+		vanillaSection = config.getConfigurationSection("vanilla");
 		fishermanNPCUUID = UUID.fromString(config.getString("fisherman_uuid"));
-		toolsConfigSection = config.getConfigurationSection("tools");
 		packExtension =  config.getString("pack_extension");
-		
 	}
 	
-	public static void reloadConfig() {
-		AlathraFishing.getInstance().reloadConfig();
-		AlathraFishing.getInstance().saveDefaultConfig();
-		initConfigVals();
-		BiomeUtil.init();
-	}
-	
-	public FileConfiguration getConfig() {
-		return config;
+	public void reloadConfig() {
+		plugin.reloadConfig();
+		plugin.saveDefaultConfig();
+		BiomeUtil.init(this);
 	}
 
+	public ConfigurationSection getToolsSection() {
+		return toolsSection;
+	}
+
+	public ConfigurationSection getVanillaSection() {
+		return vanillaSection;
+	}
+
+	public UUID getFishermanNPCUUID() {
+		return fishermanNPCUUID;
+	}
+
+	public String getPackExtension() {
+		return packExtension;
+	}
 }

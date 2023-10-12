@@ -11,10 +11,11 @@ import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.util.Helper;
 
 import net.citizensnpcs.api.CitizensAPI;
+import org.jetbrains.annotations.NotNull;
 
 public class NPCUUIDCommands implements CommandExecutor{
 	public NPCUUIDCommands(AlathraFishing plugin) {
-		plugin.getCommand("npcuuid").setExecutor((CommandExecutor) this); 
+		plugin.getCommand("npcuuid").setExecutor(this);
 	}
 	
 	public String helpMsg(boolean isConsole) {
@@ -24,7 +25,8 @@ public class NPCUUIDCommands implements CommandExecutor{
 			return Helper.chatLabel() + Helper.color("&eCommand usage: /npcuuid [citizens id]");
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	public String uuidMsg(boolean isConsole) {
 		if (isConsole) {
 			return Helper.chatLabelConsole() + "Command usage: /npcuuid [citizens id]";
@@ -32,7 +34,7 @@ public class NPCUUIDCommands implements CommandExecutor{
 			return Helper.chatLabel() + Helper.color("&eCommand usage: /npcuuid [citizens id]");
 		}
 	}
-	
+
 	public String invalidIDMsg(boolean isConsole) {
 		if (isConsole) {
 			return Helper.chatLabelConsole() + "Error - NPC ID is non-numeric";
@@ -49,15 +51,10 @@ public class NPCUUIDCommands implements CommandExecutor{
 		}
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+		boolean isConsole = !(sender instanceof Player);
 
-		boolean isConsole = true;
-
-		if (sender instanceof Player) {
-			isConsole = false;
-		}
-		
-		if (args.length == 0) {
+        if (args.length == 0) {
 			sender.sendMessage(helpMsg(isConsole));
 			return false;
 		}

@@ -8,105 +8,106 @@ import org.bukkit.entity.Player;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 
+@SuppressWarnings("unused")
 public class BiomeUtil {
 
-	private static ArrayList<String> biomes = new ArrayList<String>();
-	private static ArrayList<String> oceanBiomes = new ArrayList<String>();
+	private final static ArrayList<String> biomes = new ArrayList<>();
+	private final static ArrayList<String> oceanBiomes = new ArrayList<>();
 
-	public static void init() {
+	public static void init(Config config) {
 		// all biomes
-		biomes.add(Config.packExtension + "active_volcano_base");
-		biomes.add(Config.packExtension + "active_volcano_base_edge");
-		biomes.add(Config.packExtension + "active_volcano_pit");
-		biomes.add(Config.packExtension + "active_volcano_pit_edge");
-		biomes.add(Config.packExtension + "badlands_buttes");
-		biomes.add(Config.packExtension + "bamboo_jungle_hills");
-		biomes.add(Config.packExtension + "bamboo_jungle_mountains");
-		biomes.add(Config.packExtension + "bamboo_ponds");
-		biomes.add(Config.packExtension + "birch_forest_hills");
-		biomes.add(Config.packExtension + "caldera_volcano_base");
-		biomes.add(Config.packExtension + "caldera_volcano_base_edge");
-		biomes.add(Config.packExtension + "caldera_volcano_pit");
-		biomes.add(Config.packExtension + "caldera_volcano_pit_edge");
-		biomes.add(Config.packExtension + "cerros_de_mavecure");
-		biomes.add(Config.packExtension + "chaparral");
-		biomes.add(Config.packExtension + "cold_deep_ocean");
-		biomes.add(Config.packExtension + "cold_ocean");
-		biomes.add(Config.packExtension + "coral_ocean");
-		biomes.add(Config.packExtension + "dark_forest");
-		biomes.add(Config.packExtension + "deep_ocean");
-		biomes.add(Config.packExtension + "deep_ocean_trench");
-		biomes.add(Config.packExtension + "desert");
-		biomes.add(Config.packExtension + "dry_rocky_bumpy_mountains");
-		biomes.add(Config.packExtension + "dry_temperate_mountains");
-		biomes.add(Config.packExtension + "dry_temperate_white_mountains");
-		biomes.add(Config.packExtension + "dry_temperate_white_mountains_river");
-		biomes.add(Config.packExtension + "dry_wild_highlands");
-		biomes.add(Config.packExtension + "eucalyptus_forest");
-		biomes.add(Config.packExtension + "evergreen_forest");
-		biomes.add(Config.packExtension + "flowering_forest");
-		biomes.add(Config.packExtension + "flowering_forest_hills");
-		biomes.add(Config.packExtension + "forest");
-		biomes.add(Config.packExtension + "forest_hills");
-		biomes.add(Config.packExtension + "frozen_beach");
-		biomes.add(Config.packExtension + "frozen_deep_ocean");
-		biomes.add(Config.packExtension + "frozen_marsh");
-		biomes.add(Config.packExtension + "frozen_wetlands");
-		biomes.add(Config.packExtension + "highlands");
-		biomes.add(Config.packExtension + "ice_spikes");
-		biomes.add(Config.packExtension + "iceberg_ocean");
-		biomes.add(Config.packExtension + "jungle_hills");
-		biomes.add(Config.packExtension + "jungle_mountains");
-		biomes.add(Config.packExtension + "large_monsoon_mountains");
-		biomes.add(Config.packExtension + "mangrove_swamp");
-		biomes.add(Config.packExtension + "moorland");
-		biomes.add(Config.packExtension + "mountains");
-		biomes.add(Config.packExtension + "mountains_river");
-		biomes.add(Config.packExtension + "mushroom_hills");
-		biomes.add(Config.packExtension + "oak_savanna");
-		biomes.add(Config.packExtension + "ocean");
-		biomes.add(Config.packExtension + "palm_beach");
-		biomes.add(Config.packExtension + "palm_forest");
-		biomes.add(Config.packExtension + "plains");
-		biomes.add(Config.packExtension + "prairie");
-		biomes.add(Config.packExtension + "rainforest_hills");
-		biomes.add(Config.packExtension + "redwood_forest_hills");
-		biomes.add(Config.packExtension + "river");
-		biomes.add(Config.packExtension + "rocky_bumpy_mountains");
-		biomes.add(Config.packExtension + "rocky_sea_caves");
-		biomes.add(Config.packExtension + "sakura_mountains");
-		biomes.add(Config.packExtension + "salt_flats");
-		biomes.add(Config.packExtension + "shrublands");
-		biomes.add(Config.packExtension + "snowy_meadow");
-		biomes.add(Config.packExtension + "snowy_plains");
-		biomes.add(Config.packExtension + "snowy_terraced_mountains");
-		biomes.add(Config.packExtension + "snowy_terraced_mountains_river");
-		biomes.add(Config.packExtension + "steppe");
-		biomes.add(Config.packExtension + "subtropical_ocean");
-		biomes.add(Config.packExtension + "sunflower_plains");
-		biomes.add(Config.packExtension + "swamp");
-		biomes.add(Config.packExtension + "taiga");
-		biomes.add(Config.packExtension + "taiga_hills");
-		biomes.add(Config.packExtension + "temperate_mountains");
-		biomes.add(Config.packExtension + "temperate_mountains_river");
-		biomes.add(Config.packExtension + "tropical_deep_ocean");
-		biomes.add(Config.packExtension + "tropical_ocean");
-		biomes.add(Config.packExtension + "tundra_hills");
-		biomes.add(Config.packExtension + "wild_bumpy_mountains");
-		biomes.add(Config.packExtension + "wild_highlands");
-		biomes.add(Config.packExtension + "wooded_buttes");
-		biomes.add(Config.packExtension + "xeric_low_hills");
-		biomes.add(Config.packExtension + "xeric_mountains ");
+		biomes.add(config.getPackExtension() + "active_volcano_base");
+		biomes.add(config.getPackExtension() + "active_volcano_base_edge");
+		biomes.add(config.getPackExtension() + "active_volcano_pit");
+		biomes.add(config.getPackExtension() + "active_volcano_pit_edge");
+		biomes.add(config.getPackExtension() + "badlands_buttes");
+		biomes.add(config.getPackExtension() + "bamboo_jungle_hills");
+		biomes.add(config.getPackExtension() + "bamboo_jungle_mountains");
+		biomes.add(config.getPackExtension() + "bamboo_ponds");
+		biomes.add(config.getPackExtension() + "birch_forest_hills");
+		biomes.add(config.getPackExtension() + "caldera_volcano_base");
+		biomes.add(config.getPackExtension() + "caldera_volcano_base_edge");
+		biomes.add(config.getPackExtension() + "caldera_volcano_pit");
+		biomes.add(config.getPackExtension() + "caldera_volcano_pit_edge");
+		biomes.add(config.getPackExtension() + "cerros_de_mavecure");
+		biomes.add(config.getPackExtension() + "chaparral");
+		biomes.add(config.getPackExtension() + "cold_deep_ocean");
+		biomes.add(config.getPackExtension() + "cold_ocean");
+		biomes.add(config.getPackExtension() + "coral_ocean");
+		biomes.add(config.getPackExtension() + "dark_forest");
+		biomes.add(config.getPackExtension() + "deep_ocean");
+		biomes.add(config.getPackExtension() + "deep_ocean_trench");
+		biomes.add(config.getPackExtension() + "desert");
+		biomes.add(config.getPackExtension() + "dry_rocky_bumpy_mountains");
+		biomes.add(config.getPackExtension() + "dry_temperate_mountains");
+		biomes.add(config.getPackExtension() + "dry_temperate_white_mountains");
+		biomes.add(config.getPackExtension() + "dry_temperate_white_mountains_river");
+		biomes.add(config.getPackExtension() + "dry_wild_highlands");
+		biomes.add(config.getPackExtension() + "eucalyptus_forest");
+		biomes.add(config.getPackExtension() + "evergreen_forest");
+		biomes.add(config.getPackExtension() + "flowering_forest");
+		biomes.add(config.getPackExtension() + "flowering_forest_hills");
+		biomes.add(config.getPackExtension() + "forest");
+		biomes.add(config.getPackExtension() + "forest_hills");
+		biomes.add(config.getPackExtension() + "frozen_beach");
+		biomes.add(config.getPackExtension() + "frozen_deep_ocean");
+		biomes.add(config.getPackExtension() + "frozen_marsh");
+		biomes.add(config.getPackExtension() + "frozen_wetlands");
+		biomes.add(config.getPackExtension() + "highlands");
+		biomes.add(config.getPackExtension() + "ice_spikes");
+		biomes.add(config.getPackExtension() + "iceberg_ocean");
+		biomes.add(config.getPackExtension() + "jungle_hills");
+		biomes.add(config.getPackExtension() + "jungle_mountains");
+		biomes.add(config.getPackExtension() + "large_monsoon_mountains");
+		biomes.add(config.getPackExtension() + "mangrove_swamp");
+		biomes.add(config.getPackExtension() + "moorland");
+		biomes.add(config.getPackExtension() + "mountains");
+		biomes.add(config.getPackExtension() + "mountains_river");
+		biomes.add(config.getPackExtension() + "mushroom_hills");
+		biomes.add(config.getPackExtension() + "oak_savanna");
+		biomes.add(config.getPackExtension() + "ocean");
+		biomes.add(config.getPackExtension() + "palm_beach");
+		biomes.add(config.getPackExtension() + "palm_forest");
+		biomes.add(config.getPackExtension() + "plains");
+		biomes.add(config.getPackExtension() + "prairie");
+		biomes.add(config.getPackExtension() + "rainforest_hills");
+		biomes.add(config.getPackExtension() + "redwood_forest_hills");
+		biomes.add(config.getPackExtension() + "river");
+		biomes.add(config.getPackExtension() + "rocky_bumpy_mountains");
+		biomes.add(config.getPackExtension() + "rocky_sea_caves");
+		biomes.add(config.getPackExtension() + "sakura_mountains");
+		biomes.add(config.getPackExtension() + "salt_flats");
+		biomes.add(config.getPackExtension() + "shrublands");
+		biomes.add(config.getPackExtension() + "snowy_meadow");
+		biomes.add(config.getPackExtension() + "snowy_plains");
+		biomes.add(config.getPackExtension() + "snowy_terraced_mountains");
+		biomes.add(config.getPackExtension() + "snowy_terraced_mountains_river");
+		biomes.add(config.getPackExtension() + "steppe");
+		biomes.add(config.getPackExtension() + "subtropical_ocean");
+		biomes.add(config.getPackExtension() + "sunflower_plains");
+		biomes.add(config.getPackExtension() + "swamp");
+		biomes.add(config.getPackExtension() + "taiga");
+		biomes.add(config.getPackExtension() + "taiga_hills");
+		biomes.add(config.getPackExtension() + "temperate_mountains");
+		biomes.add(config.getPackExtension() + "temperate_mountains_river");
+		biomes.add(config.getPackExtension() + "tropical_deep_ocean");
+		biomes.add(config.getPackExtension() + "tropical_ocean");
+		biomes.add(config.getPackExtension() + "tundra_hills");
+		biomes.add(config.getPackExtension() + "wild_bumpy_mountains");
+		biomes.add(config.getPackExtension() + "wild_highlands");
+		biomes.add(config.getPackExtension() + "wooded_buttes");
+		biomes.add(config.getPackExtension() + "xeric_low_hills");
+		biomes.add(config.getPackExtension() + "xeric_mountains ");
 		
 		// ocean biomes
-		oceanBiomes.add(Config.packExtension + "cold_deep_ocean");
-		oceanBiomes.add(Config.packExtension + "cold_ocean");
-		oceanBiomes.add(Config.packExtension + "coral_ocean");
-		oceanBiomes.add(Config.packExtension + "deep_ocean");
-		oceanBiomes.add(Config.packExtension + "deep_ocean_trench");
-		oceanBiomes.add(Config.packExtension + "ocean");
-		oceanBiomes.add(Config.packExtension + "subtropical_ocean");
-		oceanBiomes.add(Config.packExtension + "tropical_ocean");
+		oceanBiomes.add(config.getPackExtension() + "cold_deep_ocean");
+		oceanBiomes.add(config.getPackExtension() + "cold_ocean");
+		oceanBiomes.add(config.getPackExtension() + "coral_ocean");
+		oceanBiomes.add(config.getPackExtension() + "deep_ocean");
+		oceanBiomes.add(config.getPackExtension() + "deep_ocean_trench");
+		oceanBiomes.add(config.getPackExtension() + "ocean");
+		oceanBiomes.add(config.getPackExtension() + "subtropical_ocean");
+		oceanBiomes.add(config.getPackExtension() + "tropical_ocean");
 
 	}
 
@@ -120,11 +121,8 @@ public class BiomeUtil {
 	
 	public static boolean isSaltWater(Location location) {
 		String biomeName = RTUBiomeLib.getInterface().getBiomeName(location);
-		if (oceanBiomes.contains(biomeName)) {
-			return true;
-		}
-		return false;
-	}
+        return oceanBiomes.contains(biomeName);
+    }
 
 	public static ArrayList<String> getBiomes() {
 		return biomes;

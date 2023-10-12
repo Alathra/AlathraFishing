@@ -1,13 +1,14 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
-import com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners.NetListener;
-import com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners.ToolUseListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.misc.EnchantmentListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.AnglingListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.NetListener;
 import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.NuclearDonut47.AlathraFishing.commands.AlathraFishingCommands;
@@ -21,20 +22,23 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class AlathraFishing extends JavaPlugin {
-    private static AlathraFishing instance;
-    private CustomTools tools;
+    private static CustomTools tools;
+    private static Config config;
+    private final static ArrayList<AlathraFishingListener> alathraFishingListeners = new ArrayList<>();
     
     private void initConfig() {
+        FileConfiguration fileConfig = this.getConfig();
+        config = new Config(this, fileConfig);
+
     	saveDefaultConfig();
-    	Config.initConfigVals();
     }
     
     private void initListeners() {
-    	ArrayList<ToolUseListener> toolUseListeners = new ArrayList<>();
+        alathraFishingListeners.add(new NetListener(this, tools));
+        alathraFishingListeners.add(new AnglingListener(this, tools));
+        alathraFishingListeners.add(new EnchantmentListener(this, tools));
 
-        toolUseListeners.add(new NetListener(this, tools));
-
-        for (ToolUseListener listener: toolUseListeners) {
+        for (AlathraFishingListener listener: alathraFishingListeners) {
             listener.registerListener();
         }
     }
@@ -46,30 +50,25 @@ public class AlathraFishing extends JavaPlugin {
             testCommand.setExecutor(new TestCommand(tools));
         }
         
-        new AlathraFishingCommands(this);
+        new AlathraFishingCommands(this, config);
     }
     
     private void initHooks() {
     	// Check if the server us running Citizens, init citizens related classes
     	if (Bukkit.getServer().getPluginManager().getPlugin("Citizens") != null)  {
     		Bukkit.getLogger().info("[" + this.getName() + "] Citizens detected! Enabling support...");
-    		Bukkit.getServer().getPluginManager().registerEvents((Listener) new CitizensRightClickNPCListener(), (Plugin) this);
+    		Bukkit.getServer().getPluginManager().registerEvents(new CitizensRightClickNPCListener(config), this);
     		new NPCUUIDCommands(this);
     	}
-    	BiomeUtil.init();
+    	BiomeUtil.init(config);
     }
 
     @Override
     public void onEnable() {
-    	instance = this;
     	initConfig();
-    	tools = new CustomTools(this, Config.toolsConfigSection);
+    	tools = new CustomTools(this, config);
         initListeners();
         initCommands();
         initHooks();
-    }
-    
-    public static AlathraFishing getInstance() {
-    	return instance;
     }
 }

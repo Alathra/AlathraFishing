@@ -1,5 +1,6 @@
 package com.github.NuclearDonut47.AlathraFishing.items;
 
+import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import net.kyori.adventure.text.Component;
 
 import static org.bukkit.Bukkit.getServer;
@@ -11,21 +12,27 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import com.github.milkdrinkers.colorparser.ColorParser;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
 
 public class CustomTools {
     private static Plugin plugin;
     private static final String[] defaultToolPaths = {"net", "fishing_rod"};
     private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD};
     private static final String[] names = {"Net", "Fishing Rod"};
-    private static final int[] modelOverrides = {1, 0};
+    private static final int[] modelOverrides = {1, 2};
     private static final int[] durabilities = {64, 64};
-
     private static final String defaultMessage = "Default value(s) is (are) being used.";
+    private static final HashMap<Material, Integer> vanillaConversions = new HashMap<>();
+    private static NamespacedKey vanillaKey;
 
-    public CustomTools(Plugin pluginInstance, ConfigurationSection toolsSection) {
+    public CustomTools(Plugin pluginInstance, Config config) {
         plugin = pluginInstance;
+        ConfigurationSection toolsSection = config.getToolsSection();
+        ConfigurationSection vanillaSection = config.getVanillaSection();
 
         if (toolsSection == null) {
             getServer().getLogger().info("tools section is missing from config.yml. " + defaultMessage);
@@ -49,13 +56,24 @@ public class CustomTools {
                 continue;
             }
 
+            setName(toolData, a);
             setItem(toolData, a);
             setModel(toolData, a);
             setDurabilities(toolData, a);
-
-            if (!(defaultToolPaths[a].equals("net") || defaultToolPaths[a].equals("fishing_rod")))
-                setName(toolData, a);
         }
+
+        if (vanillaSection == null) {
+            getServer().getLogger().info("vanilla section is missing from config.yml. " + defaultMessage);
+            return;
+        }
+
+        if (!vanillaSection.contains("fishing_rod")) {
+            getServer().getLogger().info("fishing_rod section is missing from vanilla section of config.yml" +
+                    defaultMessage);
+        }
+
+        vanillaConversions.put(Material.FISHING_ROD, checkModelOriginality(vanillaSection.getInt("fishing_rod")));
+        vanillaKey = new NamespacedKey(plugin, "vanilla_tool");
     }
 
     private void setItem(ConfigurationSection toolData, int a) {
@@ -114,28 +132,15 @@ public class CustomTools {
         modelOverrides[a] = modelOverride;
     }
 
-    private void setDurabilities(ConfigurationSection toolData, int a) {
-        final int durability = toolData.getInt("durability");
+    private int checkModelOriginality(int candidate) {
+        for (int a = 0; a < modelOverrides.length; a++) {
+            if (candidate != modelOverrides[a]) continue;
 
-        if (durability <= 0) {
-            getServer().getLogger().info(defaultToolPaths[a] +
-                    ".durability section is either 0 or missing from config.yml." + defaultMessage);
-            return;
+            candidate++;
+            a = 0;
         }
 
-        durabilities[a] = durability;
-    }
-
-    public Material[] getBaseItems(){
-        return baseItems;
-    }
-
-    public int[] getModelOverrides() {
-        return modelOverrides;
-    }
-
-    public String[] getDefaultToolPaths() {
-        return defaultToolPaths;
+        return candidate;
     }
 
     public ItemStack getTool(String tool) {
@@ -165,9 +170,52 @@ public class CustomTools {
         damageable.setCustomModelData(modelOverrides[toolVal]);
         damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durabilities[toolVal]);
         damageable.getPersistentDataContainer().set(maxKey, PersistentDataType.INTEGER, durabilities[toolVal]);
+        damageable.getPersistentDataContainer().set(vanillaKey, PersistentDataType.BOOLEAN, false);
 
         customItem.setItemMeta(damageable);
 
         return customItem;
+    }
+
+    public void convertVanillaTool(ItemStack item, int itemModel) {
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta.getPersistentDataContainer().get(vanillaKey, PersistentDataType.BOOLEAN) == null)
+            itemMeta.getPersistentDataContainer().set(vanillaKey, PersistentDataType.BOOLEAN, true);
+
+        if (!itemMeta.getPersistentDataContainer().get(vanillaKey, PersistentDataType.BOOLEAN)) return;
+
+        if (itemModel != vanillaConversions.getOrDefault(item.getType(), itemModel))
+            itemMeta.setCustomModelData(vanillaConversions.get(item.getType()));
+
+        item.setItemMeta(itemMeta);
+    }
+
+    private void setDurabilities(ConfigurationSection toolData, int a) {
+        final int durability = toolData.getInt("durability");
+
+        if (durability <= 0) {
+            getServer().getLogger().info(defaultToolPaths[a] +
+                    ".durability section is either 0 or missing from config.yml." + defaultMessage);
+            return;
+        }
+
+        durabilities[a] = durability;
+    }
+
+    public Material[] getBaseItems(){
+        return baseItems;
+    }
+
+    public int[] getModelOverrides() {
+        return modelOverrides;
+    }
+
+    public String[] getDefaultToolPaths() {
+        return defaultToolPaths;
+    }
+
+    public NamespacedKey getVanillaKey() {
+        return vanillaKey;
     }
 }

@@ -10,9 +10,11 @@ import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import com.github.NuclearDonut47.AlathraFishing.util.Helper;
 
 public class AlathraFishingCommands implements CommandExecutor {
+	private static Config config;
 
-	public AlathraFishingCommands(AlathraFishing plugin) {
-		plugin.getCommand("alathrafishing").setExecutor((CommandExecutor) this); 
+	public AlathraFishingCommands(AlathraFishing plugin, Config configInstance) {
+		plugin.getCommand("alathrafishing").setExecutor((CommandExecutor) this);
+		config = configInstance;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -35,7 +37,7 @@ public class AlathraFishingCommands implements CommandExecutor {
 			} else {
 				sender.sendMessage(Helper.chatLabelConsole() +Helper.color("&econfig.yml reloaded"));
 			}
-			Config.reloadConfig();
+			config.reloadConfig();
 		}
 		return false;
 	}

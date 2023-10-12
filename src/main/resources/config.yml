@@ -1,24 +1,26 @@
 # AlathraFishing.yml
 # Created by NuclearDonut47 for the Minecraft server Alathra.
 
-
-# DO NOT CHANGE
-config-verison: 1
-
 # Tools used in plugin.
 # The items used for tools may only be items with nonzero durability.
+# Changing tool items to other tools other than their defaults will allow them to be used as the tools they retexture.
+# Future releases of this plugin will aim to account for this,
+# in case your server uses the default tools for something else through another plugin.
 
 tools:
   net: # As a general note, enchantments will not work for this item.
-    name: "Net" # Default "Net"
+    name: "Alathran Net" # Default "Net"
     item: "FISHING_ROD"
     model: 47000 # Default 1
     durability: 16 # Default 64
   fishing_rod:
     name: "Alathran Fishing Rod" # Default "Fishing Rod"
-    item: "FISHING_ROD"
+    item: "FISHING_ROD" # Will not work unless set to fishing rod, either. Do not change
     model: 0 # Default 0
     durability: 4 # Default 64
+
+vanilla:
+  fishing_rod: 1
 
 # The pack extension in order to detect Terra biomes
 pack_extension: "terra:overworld/overworld/"

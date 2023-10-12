@@ -1,35 +1,41 @@
-package com.github.NuclearDonut47.AlathraFishing.tool_listeners.listeners;
+package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
+import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import org.bukkit.NamespacedKey;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public abstract class ToolUseListener implements Listener {
-    protected final AlathraFishing plugin;
+public abstract class ToolUseListener extends AlathraFishingListener {
     protected final CustomTools tools;
 
-    public ToolUseListener(AlathraFishing pluginInstance, CustomTools toolsInstance) {
-        plugin = pluginInstance;
+    protected ToolUseListener(AlathraFishing plugin, CustomTools toolsInstance) {
+        super(plugin);
         tools = toolsInstance;
     }
 
-    public boolean toolCheck(int index, ItemStack item) {
+    protected final boolean customToolCheck(int index, ItemStack item) {
         if (item == null) return false;
 
-        if (item.getType() != tools.getBaseItems()[0]) return false;
+        if (item.getType() != tools.getBaseItems()[index]) return false;
+
+        int itemModel = 0;
 
         if (item.getItemMeta().hasCustomModelData())
-            return tools.getModelOverrides()[index] == item.getItemMeta().getCustomModelData();
+            itemModel = item.getItemMeta().getCustomModelData();
 
-        return tools.getModelOverrides()[index] == 0;
+        tools.convertVanillaTool(item, itemModel);
+
+        return tools.getModelOverrides()[index] == itemModel;
     }
 
-    public ItemMeta toolUse(NamespacedKey durKey, NamespacedKey maxKey, ItemStack item) {
+    protected abstract void damageTool(ItemStack usedItem, Player player);
+
+    protected final ItemMeta toolUse(NamespacedKey durKey, NamespacedKey maxKey, ItemStack item) {
         Damageable damageable = (Damageable) item.getItemMeta();
 
         int durability = damageable.getPersistentDataContainer().get(durKey, PersistentDataType.INTEGER);
@@ -47,9 +53,5 @@ public abstract class ToolUseListener implements Listener {
         damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durability);
 
         return damageable;
-    }
-
-    public void registerListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 }
