@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class CustomTools {
     private static Plugin plugin;
-    private static final String[] defaultToolPaths = {"net", "fishing_rod"};
+    private static final String[] defaultToolPaths = {"net", "custom_fishing_rod"};
     private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD};
     private static final String[] names = {"Net", "Fishing Rod"};
     private static final int[] modelOverrides = {1, 2};
@@ -132,6 +132,18 @@ public class CustomTools {
         modelOverrides[a] = modelOverride;
     }
 
+    private void setDurabilities(ConfigurationSection toolData, int a) {
+        final int durability = toolData.getInt("durability");
+
+        if (durability <= 0) {
+            getServer().getLogger().info(defaultToolPaths[a] +
+                    ".durability section is either 0 or missing from config.yml." + defaultMessage);
+            return;
+        }
+
+        durabilities[a] = durability;
+    }
+
     private int checkModelOriginality(int candidate) {
         for (int a = 0; a < modelOverrides.length; a++) {
             if (candidate != modelOverrides[a]) continue;
@@ -189,18 +201,6 @@ public class CustomTools {
             itemMeta.setCustomModelData(vanillaConversions.get(item.getType()));
 
         item.setItemMeta(itemMeta);
-    }
-
-    private void setDurabilities(ConfigurationSection toolData, int a) {
-        final int durability = toolData.getInt("durability");
-
-        if (durability <= 0) {
-            getServer().getLogger().info(defaultToolPaths[a] +
-                    ".durability section is either 0 or missing from config.yml." + defaultMessage);
-            return;
-        }
-
-        durabilities[a] = durability;
     }
 
     public Material[] getBaseItems(){
