@@ -12,7 +12,6 @@ public final class Config {
 	private static AlathraFishing plugin;
 	private static ConfigurationSection toolsSection;
 	private static ConfigurationSection vanillaSection;
-	private static ConfigurationSection recipesSection;
 	private static UUID fishermanNPCUUID;
 	private static String packExtension;
 
@@ -20,7 +19,6 @@ public final class Config {
 		plugin = pluginInstance;
 		toolsSection = config.getConfigurationSection("tools");
 		vanillaSection = config.getConfigurationSection("vanilla");
-		recipesSection = config.getConfigurationSection("recipes");
 		fishermanNPCUUID = UUID.fromString(config.getString("fisherman_uuid"));
 		packExtension =  config.getString("pack_extension");
 	}
@@ -37,10 +35,6 @@ public final class Config {
 
 	public ConfigurationSection getVanillaSection() {
 		return vanillaSection;
-	}
-
-	public ConfigurationSection getRecipesSection() {
-		return recipesSection;
 	}
 
 	public UUID getFishermanNPCUUID() {

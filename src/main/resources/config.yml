@@ -1,79 +1,26 @@
 # AlathraFishing.yml
 # Created by NuclearDonut47 for the Minecraft server Alathra.
 
-# Do NOT change the section names in this config. It does not load saved defaults.
-# Deleting or changing section names in this config will break the plugin until either
-# the affected sections are restored or the config is replaced by the default available on Github.
-
 # Tools used in plugin.
 # The items used for tools may only be items with nonzero durability.
-# Changing tool items to other items other than their defaults will allow them to be used as the tools they retexture.
+# Changing tool items to other tools other than their defaults will allow them to be used as the tools they retexture.
 # Future releases of this plugin will aim to account for this,
 # in case your server uses the default tools for something else through another plugin.
-# As a general note, enchantments will not work for these items.
-# Instead, the goal is for this plugin to eventually have fishing rods receive the benefits of enchantment through
-# interacting with its unique features more specifically.
 
 tools:
-  net:
+  net: # As a general note, enchantments will not work for this item.
     name: "Alathran Net" # Default "Net"
     item: "FISHING_ROD"
     model: 47000 # Default 1
-    durability: 4 # Default 64
-  custom_fishing_rod:
+    durability: 16 # Default 64
+  fishing_rod:
     name: "Alathran Fishing Rod" # Default "Fishing Rod"
     item: "FISHING_ROD" # Will not work unless set to fishing rod, either. Do not change
-    model: 47100 # Default 0
+    model: 0 # Default 0
     durability: 4 # Default 64
 
-# If there are existing vanilla tools on your server that you don't want to replace the functionality of,
-# yet you want the custom model data for the custom tools in this plugin to be the same value as the current
-# vanilla tools, then you can convert vanilla tools to an alternative custom model data nbt
-# by setting the value in this section.
-# This process retains all other item nbt data aside from the changed custom model data.
-
 vanilla:
-  fishing_rod: 0
-
-# The custom recipes for this plugin.
-# The "add" key can be set to false if you do not wish to add the corresponding recipe.
-# Ingredient key names do not matter when changing these recipes.
-# Recipes that require specific custom model data can be added by setting the "exact" key to false.
-# However, these ingredients are added using an instances of Recipes.ExactChoice classes
-# and will not work unless all other nbt's are default for the item.
-# Fixing that requires adding a listener that this plugin does not currently have, yet.
-
-recipes:
-  crafting:
-    net:
-      add: true
-      isShaped: true
-      shape: ["!@!", "@@@", "!@!"] # Does not matter if isShaped is false.
-      ingredients:
-        flint:
-          exact: false
-          character: "!"
-          item: "FLINT"
-          model: 0 # Does not matter if exact is false.
-        string:
-          exact: false
-          character: "@"
-          item: "STRING"
-    custom_fishing_rod:
-      add: true
-      isShaped: true
-      shape: ["  !", " !@", "! @"] # Does not matter if isShaped is false.
-      ingredients:
-        stick:
-          exact: false
-          character: "!"
-          item: "STICK"
-        string:
-          exact: false
-          character: "@"
-          item: "STRING"
-  remove_vanilla:
-    fishing_rod: true
+  fishing_rod: 1
 
 # The pack extension in order to detect Terra biomes
 pack_extension: "terra:overworld/overworld/"

@@ -8,18 +8,16 @@ import org.bukkit.entity.Player;
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import com.github.NuclearDonut47.AlathraFishing.util.Helper;
-import org.jetbrains.annotations.NotNull;
 
 public class AlathraFishingCommands implements CommandExecutor {
 	private static Config config;
 
 	public AlathraFishingCommands(AlathraFishing plugin, Config configInstance) {
-		plugin.getCommand("alathrafishing").setExecutor(this);
+		plugin.getCommand("alathrafishing").setExecutor((CommandExecutor) this);
 		config = configInstance;
 	}
 
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label,
-							 String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		boolean isConsole = true;
 
