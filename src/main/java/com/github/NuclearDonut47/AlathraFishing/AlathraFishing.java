@@ -34,6 +34,8 @@ public class AlathraFishing extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         FileConfiguration fileConfig = this.getConfig();
         Config config = new Config(this, fileConfig);
 
