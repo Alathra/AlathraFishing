@@ -192,10 +192,8 @@ public class CustomTools {
     public void convertVanillaTool(ItemStack item, int itemModel) {
         ItemMeta itemMeta = item.getItemMeta();
 
-        if (itemMeta.getPersistentDataContainer().get(vanillaKey, PersistentDataType.BOOLEAN) == null)
-            itemMeta.getPersistentDataContainer().set(vanillaKey, PersistentDataType.BOOLEAN, true);
-
-        if (!itemMeta.getPersistentDataContainer().get(vanillaKey, PersistentDataType.BOOLEAN)) return;
+        if (!itemMeta.getPersistentDataContainer()
+                .getOrDefault(vanillaKey, PersistentDataType.BOOLEAN, true)) return;
 
         if (itemModel != vanillaConversions.getOrDefault(item.getType(), itemModel))
             itemMeta.setCustomModelData(vanillaConversions.get(item.getType()));

@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -50,24 +49,6 @@ public final class Recipes {
             char character = recipeInfo.getConfigurationSection("ingredients." + ingredientPath)
                     .getString("character").charAt(0);
 
-            if (recipeInfo.getConfigurationSection("ingredients." + ingredientPath).getBoolean("exact")){
-                ItemStack item = new ItemStack(Material.valueOf(
-                        recipeInfo.getConfigurationSection("ingredients." + ingredientPath)
-                                .getString("item")));
-
-                ItemMeta meta = item.getItemMeta();
-
-                meta.setCustomModelData(recipeInfo.getConfigurationSection("ingredients." + ingredientPath)
-                        .getInt("model"));
-
-                item.setItemMeta(meta);
-
-                RecipeChoice ingredient = new RecipeChoice.ExactChoice(item);
-
-                ingredients.put(character, ingredient);
-                continue;
-            }
-
             RecipeChoice ingredient = new RecipeChoice.MaterialChoice(Material.valueOf(
                     recipeInfo.getConfigurationSection("ingredients." + ingredientPath).getString("item")));
 
@@ -75,7 +56,9 @@ public final class Recipes {
         }
 
         if (result == null) return;
+
         if (shape.length == 0) return;
+
         if (ingredients.isEmpty()) return;
 
         recipeBuilder.create(true, recipeInfo.getName(), result).setShape(shape).setIngredients(ingredients)
@@ -87,24 +70,6 @@ public final class Recipes {
         ArrayList<RecipeChoice> ingredients = new ArrayList<>();
 
         for (String ingredientPath : recipeInfo.getConfigurationSection("ingredients").getKeys(false)) {
-            if (recipeInfo.getConfigurationSection("ingredients." + ingredientPath).getBoolean("exact")) {
-                ItemStack item = new ItemStack(Material.valueOf(
-                        recipeInfo.getConfigurationSection("ingredients." + ingredientPath)
-                                .getString("item")));
-
-                ItemMeta meta = item.getItemMeta();
-
-                meta.setCustomModelData(recipeInfo.getConfigurationSection("ingredients." + ingredientPath)
-                        .getInt("model"));
-
-                item.setItemMeta(meta);
-
-                RecipeChoice ingredient = new RecipeChoice.ExactChoice(item);
-
-                ingredients.add(ingredient);
-                continue;
-            }
-
             RecipeChoice ingredient = new RecipeChoice.MaterialChoice(Material.valueOf(
                     recipeInfo.getConfigurationSection(ingredientPath).getString("item")));
 
@@ -112,6 +77,7 @@ public final class Recipes {
         }
 
         if (result == null) return;
+
         if (ingredients.isEmpty()) return;
 
         recipeBuilder.create(true, recipeInfo.getName(), result).addIngredients(ingredients).build();

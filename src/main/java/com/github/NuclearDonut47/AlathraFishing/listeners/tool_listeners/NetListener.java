@@ -5,11 +5,8 @@ import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.listeners.schedulers.NetFishingEvent;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -47,7 +44,7 @@ public class NetListener extends ToolUseListener {
 
         if (!customToolCheck(0, netEvent.getItem())) return;
 
-        if (netEvent.getClickedBlock().getType().isInteractable()) return;
+        if (checkInteractable(netEvent.getClickedBlock())) return;
 
         netEvent.setCancelled(true);
 
@@ -105,6 +102,12 @@ public class NetListener extends ToolUseListener {
         }
 
         return null;
+    }
+
+    private boolean checkInteractable(Block block) {
+        if (block == null) return false;
+
+        return block.getType().isInteractable();
     }
 
     private void netPrepare(PlayerInteractEvent prepareEvent) {
