@@ -1,6 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.misc.AnvilListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.misc.EnchantmentListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.AnglingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.NetListener;
@@ -43,6 +44,7 @@ public class AlathraFishing extends JavaPlugin {
         alathraFishingListeners.add(new NetListener(this, tools));
         alathraFishingListeners.add(new AnglingListener(this, tools));
         alathraFishingListeners.add(new EnchantmentListener(this, tools));
+        alathraFishingListeners.add(new AnvilListener(this, tools));
 
         for (AlathraFishingListener listener: alathraFishingListeners) {
             listener.registerListener();

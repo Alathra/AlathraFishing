@@ -7,7 +7,7 @@
 
 # Tools used in plugin.
 # The items used for tools may only be items with nonzero durability.
-# Changing tool items to other items other than their defaults will allow them to be used as the tools they retexture.
+# Changing tool items to other tools other than their defaults will allow them to be used as the tools they retexture.
 # Future releases of this plugin will aim to account for this,
 # in case your server uses the default tools for something else through another plugin.
 # As a general note, enchantments will not work for these items.
@@ -51,25 +51,20 @@ recipes:
       shape: ["!@!", "@@@", "!@!"] # Does not matter if isShaped is false.
       ingredients:
         flint:
-          exact: false
           character: "!"
           item: "FLINT"
-          model: 0 # Does not matter if exact is false.
         string:
-          exact: false
           character: "@"
           item: "STRING"
     custom_fishing_rod:
       add: true
       isShaped: true
-      shape: ["  !", " !@", "! @"] # Does not matter if isShaped is false.
+      shape: ["  !", " !@", "! @"]
       ingredients:
         stick:
-          exact: false
           character: "!"
           item: "STICK"
         string:
-          exact: false
           character: "@"
           item: "STRING"
   remove_vanilla:
