@@ -49,8 +49,6 @@ dependencies {
     implementation("com.github.milkdrinkers:colorparser:2.0.0") {
         exclude("net.kyori")
     }
-    
-    
 }
 
 tasks {
