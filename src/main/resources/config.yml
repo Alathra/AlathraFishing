@@ -18,19 +18,20 @@ tools:
   net:
     name: "Alathran Net" # Default "Net"
     item: "FISHING_ROD"
-    model: 47000 # Default 1
-    durability: 4 # Default 64
+    model: 1 # Default 1
+    durability: 64 # Default 64
   custom_fishing_rod:
     name: "Alathran Fishing Rod" # Default "Fishing Rod"
-    item: "FISHING_ROD" # Will not work unless set to fishing rod, either. Do not change
-    model: 47100 # Default 0
-    durability: 4 # Default 64
+    item: "FISHING_ROD" # Will not work unless set to fishing rod, either. Do not change.
+    model: 0 # Default 0
+    durability: 64 # Default 64
 
 # If there are existing vanilla tools on your server that you don't want to replace the functionality of,
 # yet you want the custom model data for the custom tools in this plugin to be the same value as the current
 # vanilla tools, then you can convert vanilla tools to an alternative custom model data nbt
 # by setting the value in this section.
 # This process retains all other item nbt data aside from the changed custom model data.
+# Setting this to be the same as custom fishing rods means that vanilla fishing rods won't exist separately.
 
 vanilla:
   fishing_rod: 0
@@ -69,6 +70,74 @@ recipes:
           item: "STRING"
   remove_vanilla:
     fishing_rod: true
+
+# The only necessary attributes for fish are its name, item, and model.
+# Fish provided without lore will not have lore on them.
+# Fish without max lengths provided will be given a length equal to the minimum fish length (see below).
+# Fish without common lengths provided will be assumed to have a common length
+# that is the maximum between the minimum fish length (see below) and half the max length rounded down.
+# Default values will be used if these lengths values also don't make sense (they're negative) or
+# Default rarity is common.
+# Default for net loot is false.
+
+# Fish lengths are calculated and returned based on a binomial distribution using
+# average and max lengths found in nature.
+# Lengths are displayed and saved in this config in centimeters, but only calculated to millimeter precision.
+# There is also an overriding minumum length that can be set for all fish. By default, this length is 30 mm.
+# Lengths reaching the max length have a half chance of adding an extra millimeter to the length.
+# If an extra millimeter is added in that case,
+# then there is another half chance to add another millimeter, ad infinitum.
+# This plugin will not provide lengths that are more precise than millimeters.
+
+# If the minimum fish length is not a double greater than 0,
+# then any fish that is missing its dimensions will be spawned without a length.
+# Any fish with its proper dimensions will be generated under the assumption that the minimum length is 0.1 cm
+# if the minimum fish length is not a double greater than 0.
+
+min_fish_length: 3.0
+
+fish:
+  bluegill:
+    name: "Alathran Bluegill"
+    item: "COD"
+    lore: "Lepomis Macrochirus"
+    common_length: 19.1 # Default 19.1
+    max_length: 41.0 # Default 41.0
+    no_model: false # Default false
+    model: 47000 # Default 1
+    rarity: abundant
+    net_loot: false
+
+# DO NOT CHANGE THESE STRETCH PARAMETERS UNLESS YOU KNOW WHAT YOU'RE DOING. DO SO AT YOUR OWN RISK.
+# The stretch parameters are a means of controlling the difference in likelihood
+# between the most common length and the max length getting fish.
+# All the binomial distribution coefficients are computed
+# with a numerator of Gamma(n + 1) where n is the stretch factor.
+# What this means is that 0.1 mm above the max length is impossible
+# (aside from getting the max length and then getting lucky),
+# and n is the row of Pascal's triangle (including the 0's as the endpoints, and n = 0 is the 0, 1, 0 row).
+# that gets squished in between (max + 0.1 mm) and ((2 * common) - max - 0.1 mm).
+# For example, n = 0 corresponds to the row of Pascal's triangle 0, 1, 0.
+# As such, setting 2n = 0 results in the probability of ((2 * common) - max - 0.1 mm) = 0
+# (assuming it wasn't already because it was truncated),
+# the probability of (max + 0.1 mm) = 0, and the probability of c is PROPORTIONAL TO 1
+# There is a final renormalization that occurs.
+# The use of the gamma function allows for the use of non-integer inputs.
+# If you set n = 1, then the row of Pascal's triangle 0, 1, 1, 0
+# gets fit between (max + 0.1 mm) and ((2 * common) - max - 0.1 mm), etc.
+
+# Do not provide a non-integer or an integer that is less than 0.
+# Default of 0 is used if this is not done correctly.
+
+stretch:
+  abundant: 0
+
+# The relative weight of getting a particular fish or item in its rarity group.
+# Not having a value here for a fish corresponds to the fish never being obtainable.
+
+weight:
+  fish:
+    bluegill: 1
 
 # The pack extension in order to detect Terra biomes
 pack_extension: "terra:overworld/overworld/"

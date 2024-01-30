@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.NuclearDonut47.AlathraFishing"
-version = "0.3.1-SNAPSHOT"
+version = "0.3.2-SNAPSHOT"
 description = ""
 
 java {
@@ -34,7 +34,7 @@ dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
     annotationProcessor("org.jetbrains:annotations:24.0.1")
     
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
@@ -49,6 +49,8 @@ dependencies {
     implementation("com.github.milkdrinkers:colorparser:2.0.0") {
         exclude("net.kyori")
     }
+
+    implementation("org.apache.commons:commons-math3:3.6.1")
 }
 
 tasks {
@@ -85,7 +87,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the clicktpa.
         // Your clicktpa's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.1")
+        minecraftVersion("1.20.4")
 
         // IntelliJ IDEA debugger setup: https://docs.papermc.io/paper/dev/debugging#using-a-remote-debugger
         jvmArgs("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005")
@@ -116,8 +118,6 @@ bukkit {
     softDepend = listOf("Citizens", "RTUBiomeLib")
 
     commands {
-        register("test"){
-        }
         register("alathrafishing"){
         }
         register("npcuuid"){

@@ -1,8 +1,10 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
+import com.github.NuclearDonut47.AlathraFishing.fish.RewardGenerator;
+import com.github.NuclearDonut47.AlathraFishing.items.CustomFish;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
-import com.github.NuclearDonut47.AlathraFishing.listeners.misc.AnvilListener;
-import com.github.NuclearDonut47.AlathraFishing.listeners.misc.EnchantmentListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.AnvilListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.EnchantmentListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.AnglingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.NetListener;
 import com.github.NuclearDonut47.AlathraFishing.recipes.Recipes;
@@ -40,11 +42,14 @@ public class AlathraFishing extends JavaPlugin {
         Config config = new Config(this, fileConfig);
 
     	CustomTools tools = new CustomTools(this, config);
+        CustomFish fish = new CustomFish(this, config);
+
+        RewardGenerator rewardGenerator = new RewardGenerator(fish);
 
         ArrayList<AlathraFishingListener> alathraFishingListeners = new ArrayList<>();
 
-        alathraFishingListeners.add(new NetListener(this, tools));
-        alathraFishingListeners.add(new AnglingListener(this, tools));
+        alathraFishingListeners.add(new NetListener(this, tools, rewardGenerator));
+        alathraFishingListeners.add(new AnglingListener(this, tools, rewardGenerator));
         alathraFishingListeners.add(new EnchantmentListener(this, tools));
         alathraFishingListeners.add(new AnvilListener(this, tools));
 

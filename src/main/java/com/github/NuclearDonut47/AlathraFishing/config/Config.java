@@ -10,19 +10,23 @@ import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
 
 public final class Config {
 	private static AlathraFishing plugin;
+	private static FileConfiguration config;
 	private static ConfigurationSection toolsSection;
+	private static ConfigurationSection fishSection;
 	private static ConfigurationSection vanillaSection;
 	private static ConfigurationSection recipesSection;
 	private static UUID fishermanNPCUUID;
 	private static String packExtension;
 
-	public Config(AlathraFishing pluginInstance, FileConfiguration config) {
+	public Config(AlathraFishing pluginInstance, FileConfiguration configInstance) {
 		plugin = pluginInstance;
-		toolsSection = config.getConfigurationSection("tools");
-		vanillaSection = config.getConfigurationSection("vanilla");
-		recipesSection = config.getConfigurationSection("recipes");
-		fishermanNPCUUID = UUID.fromString(config.getString("fisherman_uuid"));
-		packExtension =  config.getString("pack_extension");
+		config = configInstance;
+		toolsSection = configInstance.getConfigurationSection("tools");
+		fishSection = configInstance.getConfigurationSection("fish");
+		vanillaSection = configInstance.getConfigurationSection("vanilla");
+		recipesSection = configInstance.getConfigurationSection("recipes");
+		fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
+		packExtension =  configInstance.getString("pack_extension");
 	}
 	
 	public void reloadConfig() {
@@ -31,8 +35,16 @@ public final class Config {
 		BiomeUtil.init(this);
 	}
 
+	public FileConfiguration getConfig() {
+		return config;
+	}
+
 	public ConfigurationSection getToolsSection() {
 		return toolsSection;
+	}
+
+	public ConfigurationSection getFishSection() {
+		return fishSection;
 	}
 
 	public ConfigurationSection getVanillaSection() {

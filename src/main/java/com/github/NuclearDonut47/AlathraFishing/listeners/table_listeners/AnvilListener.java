@@ -1,10 +1,11 @@
-package com.github.NuclearDonut47.AlathraFishing.listeners.misc;
+package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,7 +18,7 @@ public final class AnvilListener extends AlathraFishingListener {
         tools = toolsInstance;
     }
 
-    @EventHandler @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGH) @SuppressWarnings("unused")
     public void removeEnchanting(PrepareAnvilEvent prepEvent) {
         AnvilInventory anvil = prepEvent.getInventory();
 
@@ -25,8 +26,6 @@ public final class AnvilListener extends AlathraFishingListener {
 
         if (anvil.getSecondItem() == null) return;
 
-        Material firstItem = anvil.getFirstItem().getType();
-        Material secondItem = anvil.getSecondItem().getType();
         int firstModel = 0;
         int secondModel = 0;
 
@@ -36,8 +35,8 @@ public final class AnvilListener extends AlathraFishingListener {
         if (prepEvent.getInventory().getSecondItem().getItemMeta().hasCustomModelData())
             secondModel = prepEvent.getInventory().getSecondItem().getItemMeta().getCustomModelData();
 
-        boolean invalidFirstItem = toolCheck(firstItem, firstModel);
-        boolean invalidSecondItem = toolCheck(secondItem, secondModel);
+        boolean invalidFirstItem = invalidToolCheck(anvil.getFirstItem().getType(), firstModel);
+        boolean invalidSecondItem = invalidToolCheck(anvil.getSecondItem().getType(), secondModel);
 
         if (invalidFirstItem && invalidSecondItem) {
             return;
@@ -47,24 +46,20 @@ public final class AnvilListener extends AlathraFishingListener {
 
         if (!invalidSecondItem) tools.convertVanillaTool(anvil.getSecondItem(), secondModel);
 
-        if (!anvil.getFirstItem().getItemMeta().getPersistentDataContainer()
-                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, true) &&
-                (firstItem == secondItem)) prepEvent.setResult(null);
+        boolean nonVanillaToolPresent = !anvil.getFirstItem().getItemMeta().getPersistentDataContainer()
+                .get(tools.getVanillaKey(), PersistentDataType.BOOLEAN);
 
         if (!anvil.getSecondItem().getItemMeta().getPersistentDataContainer()
-                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, true) &&
-                (firstItem == secondItem)) prepEvent.setResult(null);
+                .get(tools.getVanillaKey(), PersistentDataType.BOOLEAN)) nonVanillaToolPresent = true;
 
-        if (!anvil.getFirstItem().getItemMeta().getPersistentDataContainer()
-                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, true) &&
-                secondItem == Material.ENCHANTED_BOOK) prepEvent.setResult(null);
+        if (!nonVanillaToolPresent) return;
 
-        if (!anvil.getSecondItem().getItemMeta().getPersistentDataContainer()
-                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, true) &&
-                firstItem == Material.ENCHANTED_BOOK) prepEvent.setResult(null);
+        if (anvil.getFirstItem().getType() == anvil.getSecondItem().getType()) prepEvent.setResult(null);
+
+        if (anvil.getSecondItem().getType() == Material.ENCHANTED_BOOK) prepEvent.setResult(null);
     }
 
-    private boolean toolCheck(Material item, int model) {
+    private boolean invalidToolCheck(Material item, int model) {
         for (int a = 0; a < tools.getDefaultToolPaths().length; a++) {
             if (item != tools.getBaseItems()[a]) continue;
 

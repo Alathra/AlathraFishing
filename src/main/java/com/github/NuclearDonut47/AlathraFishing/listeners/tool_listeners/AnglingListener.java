@@ -1,6 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
+import com.github.NuclearDonut47.AlathraFishing.fish.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,8 +16,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import static org.bukkit.event.player.PlayerFishEvent.State;
 
 public class AnglingListener extends ToolUseListener {
-    public AnglingListener(AlathraFishing plugin, CustomTools tools) {
+    private final RewardGenerator rewardGenerator;
+
+    public AnglingListener(AlathraFishing plugin, CustomTools tools, RewardGenerator rewardGeneratorInstance) {
         super(plugin, tools);
+        rewardGenerator = rewardGeneratorInstance;
     }
 
     @EventHandler @SuppressWarnings("unused")
@@ -38,7 +42,7 @@ public class AnglingListener extends ToolUseListener {
 
         Item itemEntity = (Item) anglingEvent.getCaught();
 
-        itemEntity.setItemStack(new ItemStack(Material.LILY_PAD));
+        itemEntity.setItemStack(rewardGenerator.giveReward(false));
     }
 
     private void vanillaAngling(PlayerFishEvent anglingEvent) {

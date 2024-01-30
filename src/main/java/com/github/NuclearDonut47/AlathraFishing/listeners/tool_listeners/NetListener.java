@@ -1,13 +1,13 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
+import com.github.NuclearDonut47.AlathraFishing.fish.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.listeners.schedulers.NetFishingEvent;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,16 +21,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class NetListener extends ToolUseListener {
+    private final RewardGenerator rewardGenerator;
     private static final Component prepareMessage = ColorParser.of("You look at the water and prepare to cast your net.").build();
     private static final Component cancelMessage = ColorParser.of("You look away from the water.").build();
     private static final Component castMessage = ColorParser.of("You cast your net. Right-click again to pull it in!").build();
     private static final Component failMessage = ColorParser.of("Your net came up empty.").build();
     private static final ArrayList<NetFishingEvent> activeNetTasks = new ArrayList<>();
+    private static final Random random = new Random();
 
-    public NetListener(AlathraFishing plugin, CustomTools tools) {
+    public NetListener(AlathraFishing plugin, CustomTools tools, RewardGenerator rewardGeneratorInstance) {
         super(plugin, tools);
+        rewardGenerator = rewardGeneratorInstance;
     }
 
     @EventHandler @SuppressWarnings("unused")
@@ -38,7 +42,8 @@ public class NetListener extends ToolUseListener {
         if (netEvent.getHand() != EquipmentSlot.HAND) return;
 
         if (netEvent.getAction().isLeftClick()) return;
-        // API is broken. Listener will trip twice, once for right-click, once for left-click.
+        // API is broken at time of writing.
+        // Listener will trip twice, once for right-click, once for left-click.
         // This only happens for right-clicking.
         // Left-clicking will trip event for two left-clicks.
 
@@ -152,23 +157,22 @@ public class NetListener extends ToolUseListener {
         if (netFishingEvent.isFishCatchable()) {
             Location nettingLocation = netFishingEvent.getNettingLocation();
             Location playerLocation = pullEvent.getPlayer().getLocation();
-            ItemStack reward = new ItemStack(Material.ENCHANTED_BOOK);
+            int lootAmount = random.nextInt(1, 8);
 
             playerLocation.add(0, 2, 0);
 
-            ItemMeta rewardMeta = reward.getItemMeta();
+            for (int a = 0; a < lootAmount; a++) {
+                ItemStack reward = new ItemStack(Material.LILY_PAD);
 
-            rewardMeta.addEnchant(Enchantment.MENDING, 1, false);
+                Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
 
-            reward.setItemMeta(rewardMeta);
+                Vector velocity = new Vector(2 * ((playerLocation.getX() - nettingLocation.getX()) / 20),
+                        (2 * (playerLocation.getY() - nettingLocation.getY()) / 20),
+                        (2 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
 
-            Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
+                rewardDrop.setVelocity(velocity);
+            }
 
-            Vector velocity = new Vector(2 * ((playerLocation.getX() - nettingLocation.getX()) / 20),
-                    (2 * (playerLocation.getY() - nettingLocation.getY()) / 20),
-                    (2 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
-
-            rewardDrop.setVelocity(velocity);
             return;
         }
 
