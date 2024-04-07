@@ -1,4 +1,4 @@
-package com.github.NuclearDonut47.AlathraFishing.fish;
+package com.github.NuclearDonut47.AlathraFishing.rewards;
 
 import com.github.NuclearDonut47.AlathraFishing.items.Fish;
 import org.bukkit.inventory.ItemStack;

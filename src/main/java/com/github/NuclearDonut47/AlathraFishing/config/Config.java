@@ -6,60 +6,51 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.util.BiomeUtil;
 
 public final class Config {
-	private static AlathraFishing plugin;
-	private static FileConfiguration config;
-	private static ConfigurationSection toolsSection;
-	private static ConfigurationSection fishSection;
-	private static ConfigurationSection vanillaSection;
-	private static ConfigurationSection recipesSection;
-	private static UUID fishermanNPCUUID;
-	private static String packExtension;
+    private static AlathraFishing plugin;
+    private static FileConfiguration config;
+    private static ConfigurationSection toolsSection;
+    private static ConfigurationSection fishSection;
+    private static ConfigurationSection vanillaSection;
+    private static ConfigurationSection recipesSection;
+    private static UUID fishermanNPCUUID;
+    private static String packExtension;
 
-	public Config(AlathraFishing pluginInstance, FileConfiguration configInstance) {
-		plugin = pluginInstance;
-		config = configInstance;
-		toolsSection = configInstance.getConfigurationSection("tools");
-		fishSection = configInstance.getConfigurationSection("fish");
-		vanillaSection = configInstance.getConfigurationSection("vanilla");
-		recipesSection = configInstance.getConfigurationSection("recipes");
-		fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
-		packExtension =  configInstance.getString("pack_extension");
-	}
-	
-	public void reloadConfig() {
-		plugin.reloadConfig();
-		plugin.saveDefaultConfig();
-		BiomeUtil.init(this);
-	}
+    public Config(AlathraFishing pluginInstance, FileConfiguration configInstance) {
+        plugin = pluginInstance;
+        config = configInstance;
+        toolsSection = configInstance.getConfigurationSection("tools");
+        fishSection = configInstance.getConfigurationSection("fish");
+        vanillaSection = configInstance.getConfigurationSection("vanilla");
+        recipesSection = configInstance.getConfigurationSection("recipes");
+        fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
+        packExtension = configInstance.getString("pack_extension");
+    }
 
-	public FileConfiguration getConfig() {
-		return config;
-	}
+    public void reloadConfig() {
+        plugin.reloadConfig();
+        plugin.saveDefaultConfig();
+    }
 
-	public ConfigurationSection getToolsSection() {
-		return toolsSection;
-	}
+    public ConfigurationSection getToolsSection() {
+        return toolsSection;
+    }
 
-	public ConfigurationSection getFishSection() {
-		return fishSection;
-	}
 
-	public ConfigurationSection getVanillaSection() {
-		return vanillaSection;
-	}
+    public ConfigurationSection getVanillaSection() {
+        return vanillaSection;
+    }
 
-	public ConfigurationSection getRecipesSection() {
-		return recipesSection;
-	}
+    public ConfigurationSection getRecipesSection() {
+        return recipesSection;
+    }
 
-	public UUID getFishermanNPCUUID() {
-		return fishermanNPCUUID;
-	}
+    public UUID getFishermanNPCUUID() {
+        return fishermanNPCUUID;
+    }
 
-	public String getPackExtension() {
-		return packExtension;
-	}
+    public String getPackExtension() {
+        return packExtension;
+    }
 }

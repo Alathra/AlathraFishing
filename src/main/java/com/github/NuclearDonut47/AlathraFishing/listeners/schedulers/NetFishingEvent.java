@@ -117,10 +117,7 @@ public final class NetFishingEvent extends BukkitRunnable {
     private void prepareCast() {
         if (count < waitTime) return;
 
-        if (count == waitTime) {
-            particleSpawner(Particle.WATER_BUBBLE, 5);
-            fishCatchable = true;
-        }
+        if (count == waitTime) fishCatchable = true;
 
         if (count < (waitTime + 60)) particleSpawner(Particle.WATER_BUBBLE, 5);
 

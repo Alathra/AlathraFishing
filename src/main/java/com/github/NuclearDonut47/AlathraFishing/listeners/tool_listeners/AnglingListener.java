@@ -1,7 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.fish.RewardGenerator;
+import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

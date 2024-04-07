@@ -1,7 +1,7 @@
-package com.github.NuclearDonut47.AlathraFishing.fish;
+package com.github.NuclearDonut47.AlathraFishing.rewards;
 
-import com.github.NuclearDonut47.AlathraFishing.fish.loot.AbundantFishLootGenerator;
-import com.github.NuclearDonut47.AlathraFishing.fish.loot.NetLootGenerator;
+import com.github.NuclearDonut47.AlathraFishing.rewards.loot.AbundantFishLootGenerator;
+import com.github.NuclearDonut47.AlathraFishing.rewards.loot.NetLootGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomFish;
 import com.github.NuclearDonut47.AlathraFishing.items.Fish;
 import org.bukkit.inventory.ItemStack;
