@@ -44,7 +44,7 @@ dependencies {
         exclude(group = "*", module = "*")
     }
     
-    implementation(files("libs/RTUBiomeLib-1.9.0.jar"))
+    compileOnly(files("libs/RTUBiomeLib-1.9.0.jar"))
 
     implementation("com.github.milkdrinkers:colorparser:2.0.0") {
         exclude("net.kyori")

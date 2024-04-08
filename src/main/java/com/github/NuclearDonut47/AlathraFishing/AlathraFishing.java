@@ -10,6 +10,7 @@ import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.NetList
 import com.github.NuclearDonut47.AlathraFishing.recipes.Recipes;
 import com.github.NuclearDonut47.AlathraFishing.util.Biomes;
 
+import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,6 +49,8 @@ public class AlathraFishing extends JavaPlugin {
         Biomes biomes = null;
 
         if (Bukkit.getServer().getPluginManager().getPlugin("Terra") != null) biomes = new Biomes(config);
+
+        getServer().getLogger().info(String.valueOf(RTUBiomeLib.getInterface().getBiomesAsString()));
 
         ArrayList<AlathraFishingListener> alathraFishingListeners = new ArrayList<>();
 
