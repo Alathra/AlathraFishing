@@ -33,10 +33,13 @@ public final class Config {
         plugin.saveDefaultConfig();
     }
 
+    public FileConfiguration getConfig() {return config;}
+
     public ConfigurationSection getToolsSection() {
         return toolsSection;
     }
 
+    public ConfigurationSection getFishSection() {return fishSection;}
 
     public ConfigurationSection getVanillaSection() {
         return vanillaSection;
