@@ -1,9 +1,12 @@
 package com.github.NuclearDonut47.AlathraFishing.rewards;
 
+import com.github.NuclearDonut47.AlathraFishing.config.Config;
+import com.github.NuclearDonut47.AlathraFishing.items.CustomMiscLoot;
+import com.github.NuclearDonut47.AlathraFishing.items.Loot;
 import com.github.NuclearDonut47.AlathraFishing.rewards.loot.AbundantFishLootGenerator;
 import com.github.NuclearDonut47.AlathraFishing.rewards.loot.NetLootGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomFish;
-import com.github.NuclearDonut47.AlathraFishing.items.Fish;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -24,23 +27,27 @@ public class RewardGenerator {
     private final NetLootGenerator netLootGenerator;
     private final AbundantFishLootGenerator abundantFishLootGenerator;
 
-    public RewardGenerator(CustomFish customFish) {
-        ArrayList<Fish> netLoot = new ArrayList<>();
-        ArrayList<Fish> abundantFishLoot = new ArrayList<>();
+    public RewardGenerator(CustomFish customFish, CustomMiscLoot miscLoot, Config config) {
+        ArrayList<Loot> netLoot = new ArrayList<>();
+        ArrayList<Loot> abundantFishLoot = new ArrayList<>();
 
-        for (Fish fish : customFish.getFish()) {
-            if (fish.isNetLoot()) netLoot.add(fish);
+        ArrayList<Loot> customLoot = new ArrayList<>();
+        customLoot.addAll(customFish.getFish());
+        customLoot.addAll(miscLoot.getMiscLoot());
 
-            abundantFishLoot.add(fish);
+        for (Loot loot : customLoot) {
+            if (loot.isNetLoot()) netLoot.add(loot);
+
+            abundantFishLoot.add(loot);
         }
 
-        netLootGenerator = new NetLootGenerator(netLoot);
-        abundantFishLootGenerator = new AbundantFishLootGenerator(abundantFishLoot);
+        netLootGenerator = new NetLootGenerator(netLoot, config.getBiomesSection());
+        abundantFishLootGenerator = new AbundantFishLootGenerator(abundantFishLoot, config.getBiomesSection());
     }
 
-    public ItemStack giveReward(boolean netEvent) {
-        if (netEvent) return netLootGenerator.generateLoot();
+    public ItemStack giveReward(boolean netEvent, String biome) {
+        if (netEvent) return netLootGenerator.generateLoot(biome);
 
-        return  abundantFishLootGenerator.generateLoot();
+        return  abundantFishLootGenerator.generateLoot(biome);
     }
 }

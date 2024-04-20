@@ -3,6 +3,7 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -42,7 +43,8 @@ public class AnglingListener extends ToolUseListener {
 
         Item itemEntity = (Item) anglingEvent.getCaught();
 
-        itemEntity.setItemStack(rewardGenerator.giveReward(false));
+        itemEntity.setItemStack(rewardGenerator.giveReward(false,
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation())));
     }
 
     private void vanillaAngling(PlayerFishEvent anglingEvent) {

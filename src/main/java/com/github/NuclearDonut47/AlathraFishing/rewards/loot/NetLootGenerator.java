@@ -1,28 +1,32 @@
 package com.github.NuclearDonut47.AlathraFishing.rewards.loot;
 
+import com.github.NuclearDonut47.AlathraFishing.items.Loot;
 import com.github.NuclearDonut47.AlathraFishing.rewards.LootTable;
-import com.github.NuclearDonut47.AlathraFishing.items.Fish;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
 public class NetLootGenerator extends LootTable {
-    // Handles generating loot for net.
-    // Any logic concerning logic for what can and cannot be caught for a net at any given time goes here.
+    private static final ArrayList<String> validBiomes = new ArrayList<>();
 
-    public NetLootGenerator(ArrayList<Fish> fishList) {
-        super(fishList);
+    public NetLootGenerator(ArrayList<Loot> lootList, ConfigurationSection biomesSection) {
+        super(lootList);
+
+        validBiomes.addAll(biomesSection.getStringList("net_biomes"));
     }
 
     @Override
-    public ItemStack generateLoot() {
+    public ItemStack generateLoot(String biome) {
+        if (!validBiomes.contains(biome)) return null;
+
         int fishIndex = random.nextInt(0, weightTotal);
         int weightTally = 0;
 
-        for (Fish thisFish: fish) {
-            weightTally += thisFish.getWeight();
+        for (Loot thisLoot: loot) {
+            weightTally += thisLoot.getWeight();
 
-            if (fishIndex < weightTally) return thisFish.getFishStack();
+            if (fishIndex < weightTally) return thisLoot.getLootStack();
         }
 
         return null;

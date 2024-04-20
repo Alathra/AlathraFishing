@@ -1,5 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
+import com.github.NuclearDonut47.AlathraFishing.items.CustomMiscLoot;
+import com.github.NuclearDonut47.AlathraFishing.listeners.StickListener;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomFish;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
@@ -43,14 +45,17 @@ public class AlathraFishing extends JavaPlugin {
 
         CustomTools tools = new CustomTools(this, config);
         CustomFish fish = new CustomFish(this, config);
+        CustomMiscLoot miscLoot = new CustomMiscLoot();
 
-        RewardGenerator rewardGenerator = new RewardGenerator(fish);
+        RewardGenerator rewardGenerator = new RewardGenerator(fish, miscLoot, config);
 
         Biomes biomes = null;
 
         if (Bukkit.getServer().getPluginManager().getPlugin("Terra") != null) biomes = new Biomes(config);
 
-        getServer().getLogger().info(String.valueOf(RTUBiomeLib.getInterface().getBiomesAsString()));
+        for (String biomeString : RTUBiomeLib.getInterface().getBiomesAsString()) {
+            getLogger().info(biomeString);
+        }
 
         ArrayList<AlathraFishingListener> alathraFishingListeners = new ArrayList<>();
 
@@ -58,6 +63,9 @@ public class AlathraFishing extends JavaPlugin {
         alathraFishingListeners.add(new AnglingListener(this, tools, rewardGenerator));
         alathraFishingListeners.add(new EnchantmentListener(this, tools));
         alathraFishingListeners.add(new AnvilListener(this, tools));
+
+        if (config.getDevModeSection().getBoolean("dev_mode_on"))
+            alathraFishingListeners.add(new StickListener(this));
 
         for (AlathraFishingListener listener: alathraFishingListeners) listener.registerListener();
 

@@ -11,21 +11,25 @@ public final class Config {
     private static AlathraFishing plugin;
     private static FileConfiguration config;
     private static ConfigurationSection toolsSection;
-    private static ConfigurationSection fishSection;
     private static ConfigurationSection vanillaSection;
     private static ConfigurationSection recipesSection;
+    private static ConfigurationSection fishSection;
+    private static ConfigurationSection biomesSection;
     private static UUID fishermanNPCUUID;
     private static String packExtension;
+    private static ConfigurationSection devModeSection;
 
     public Config(AlathraFishing pluginInstance, FileConfiguration configInstance) {
         plugin = pluginInstance;
         config = configInstance;
         toolsSection = configInstance.getConfigurationSection("tools");
-        fishSection = configInstance.getConfigurationSection("fish");
         vanillaSection = configInstance.getConfigurationSection("vanilla");
         recipesSection = configInstance.getConfigurationSection("recipes");
+        fishSection = configInstance.getConfigurationSection("fish");
+        biomesSection = configInstance.getConfigurationSection("biomes");
         fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
         packExtension = configInstance.getString("pack_extension");
+        devModeSection = configInstance.getConfigurationSection("dev_mode");
     }
 
     public void reloadConfig() {
@@ -39,8 +43,6 @@ public final class Config {
         return toolsSection;
     }
 
-    public ConfigurationSection getFishSection() {return fishSection;}
-
     public ConfigurationSection getVanillaSection() {
         return vanillaSection;
     }
@@ -49,11 +51,23 @@ public final class Config {
         return recipesSection;
     }
 
+    public ConfigurationSection getFishSection() {
+        return fishSection;
+    }
+
+    public ConfigurationSection getBiomesSection() {
+        return biomesSection;
+    }
+
     public UUID getFishermanNPCUUID() {
         return fishermanNPCUUID;
     }
 
     public String getPackExtension() {
         return packExtension;
+    }
+
+    public ConfigurationSection getDevModeSection() {
+        return devModeSection;
     }
 }

@@ -133,5 +133,4 @@ public class Biomes {
 	public static ArrayList<String> getBiomes() {
 		return biomes;
 	}
-
 }

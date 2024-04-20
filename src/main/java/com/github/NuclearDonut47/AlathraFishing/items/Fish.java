@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class Fish {
+public class Fish extends Loot {
     private static Plugin plugin;
     private final String identifier;
     private final String name;
@@ -25,12 +25,12 @@ public class Fish {
     private final int model;
     private final String rarity;
     private final boolean netLoot;
-    private final int weight;
     private final Random random = new Random();
 
     public Fish(Plugin pluginInstance, String fishIdentifier, String fishName, Material fishItem, String fishLore,
                 double fishCommonLength, double fishMaxLength, int fishModel, String fishRarity, boolean fishNetLoot,
                 int weightInstance, double fishMinLength, int stretch) {
+        super(weightInstance);
         plugin  = pluginInstance;
         identifier = fishIdentifier;
         name = fishName;
@@ -39,10 +39,6 @@ public class Fish {
         model = fishModel;
         rarity = Objects.requireNonNullElse(fishRarity, "Abundant");
         netLoot = fishNetLoot;
-
-        if (weightInstance < 0) weightInstance = 0;
-
-        weight = weightInstance;
 
         int minLength = evaluateMinLength((int) Math.round(fishMinLength * 10));
         int maxLength = evaluateMaxLength((int) Math.round(fishMaxLength * 10), minLength);
@@ -102,7 +98,7 @@ public class Fish {
                 (((((double) stretch / 2) + 1) / (max - center + 1)) * (loc - center)) + 1));
     }
 
-    public ItemStack getFishStack() {
+    public ItemStack getLootStack() {
         ItemStack fish = new ItemStack(item);
 
         ItemMeta fishMeta = fish.getItemMeta();
@@ -155,9 +151,5 @@ public class Fish {
 
     public boolean isNetLoot() {
         return netLoot;
-    }
-
-    public int getWeight() {
-        return weight;
     }
 }

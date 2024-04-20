@@ -4,6 +4,7 @@ import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.listeners.schedulers.NetFishingEvent;
+import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -162,7 +163,8 @@ public class NetListener extends ToolUseListener {
             playerLocation.add(0, 2, 0);
 
             for (int a = 0; a < lootAmount; a++) {
-                ItemStack reward = new ItemStack(Material.LILY_PAD);
+                ItemStack reward = rewardGenerator.giveReward(true,
+                        RTUBiomeLib.getInterface().getBiomeName(nettingLocation));
 
                 Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
 

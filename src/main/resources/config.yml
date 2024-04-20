@@ -139,6 +139,10 @@ weight:
   fish:
     bluegill: 1
 
+biomes:
+  net:
+
+
 # The pack extension in order to detect Terra biomes
 pack_extension: "terra:overworld/overworld/"
     
@@ -146,3 +150,8 @@ pack_extension: "terra:overworld/overworld/"
 
 # The UUID associated with the citizens NPC. Ignored if citizens is not enabled.
 fisherman_uuid: "f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454"
+
+# Do not enable this on the main server.
+dev_mode:
+  dev_mode_on: true
+  vanilla_biomes: true
