@@ -4,6 +4,7 @@ import com.github.milkdrinkers.colorparser.ColorParser;
 import org.apache.commons.math3.special.Gamma;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -11,12 +12,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class Fish extends Loot {
     private static Plugin plugin;
-    private final String identifier;
     private final String name;
     private final Material item;
     private final String lore;
@@ -24,25 +23,29 @@ public class Fish extends Loot {
     private final ArrayList<Double> lengthDist = new ArrayList<>();
     private final int model;
     private final String rarity;
-    private final boolean netLoot;
     private final Random random = new Random();
 
-    public Fish(Plugin pluginInstance, String fishIdentifier, String fishName, Material fishItem, String fishLore,
-                double fishCommonLength, double fishMaxLength, int fishModel, String fishRarity, boolean fishNetLoot,
-                int weightInstance, double fishMinLength, int stretch) {
-        super(weightInstance);
-        plugin  = pluginInstance;
-        identifier = fishIdentifier;
-        name = fishName;
-        item = fishItem;
-        lore = fishLore;
-        model = fishModel;
-        rarity = Objects.requireNonNullElse(fishRarity, "Abundant");
-        netLoot = fishNetLoot;
+    public Fish(Plugin pluginInstance, String fishIdentifier, ConfigurationSection fishConfig,
+                int modelInstance, double fishMinLength, int stretch) {
+        super(fishIdentifier);
+        plugin = pluginInstance;
+        name = fishConfig.getString("name");
+        lore = fishConfig.getString("lore");
+        model = modelInstance;
+
+
+        rarity = fishConfig.getString("rarity");
+
+        if (Material.getMaterial(fishConfig.getString("item")) != null) {
+            item = Material.getMaterial(fishConfig.getString("item"));
+        } else {
+            item = Material.SALMON;
+        }
 
         int minLength = evaluateMinLength((int) Math.round(fishMinLength * 10));
-        int maxLength = evaluateMaxLength((int) Math.round(fishMaxLength * 10), minLength);
-        int commonLength = evaluateCommonLength((int) Math.round(fishCommonLength * 10), maxLength, minLength);
+        int maxLength = evaluateMaxLength((int) Math.round(fishConfig.getDouble("max_length") * 10), minLength);
+        int commonLength = evaluateCommonLength((int) Math.round(fishConfig.getDouble("common_length") * 10),
+                maxLength, minLength);
         minBound = evaluateMinBound(commonLength, maxLength, minLength);
 
         if (stretch <= 0) stretch = 0;
@@ -98,7 +101,7 @@ public class Fish extends Loot {
                 (((((double) stretch / 2) + 1) / (max - center + 1)) * (loc - center)) + 1));
     }
 
-    public ItemStack getLootStack() {
+    public ItemStack generateLootStack() {
         ItemStack fish = new ItemStack(item);
 
         ItemMeta fishMeta = fish.getItemMeta();
@@ -106,7 +109,8 @@ public class Fish extends Loot {
         fishMeta.displayName(ColorParser.of(name).build());
 
         fishMeta.lore(List.of(
-                ColorParser.of(lore).build(), ColorParser.of(generateLength() + " cm").build()));
+                ColorParser.of(lore).build(), ColorParser.of(generateLength() + " cm").build(),
+                ColorParser.of("Abundant Fish").build()));
 
         fishMeta.setCustomModelData(model);
 
@@ -147,9 +151,5 @@ public class Fish extends Loot {
 
             loc++;
         }
-    }
-
-    public boolean isNetLoot() {
-        return netLoot;
     }
 }

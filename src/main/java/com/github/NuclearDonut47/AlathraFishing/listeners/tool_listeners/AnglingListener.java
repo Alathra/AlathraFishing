@@ -2,17 +2,14 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
 import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import static org.bukkit.event.player.PlayerFishEvent.State;
 
@@ -24,7 +21,7 @@ public class AnglingListener extends ToolUseListener {
         rewardGenerator = rewardGeneratorInstance;
     }
 
-    @EventHandler @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
     public void anglingFishing(PlayerFishEvent anglingEvent) {
         if (!customToolCheck(1, anglingEvent.getPlayer().getInventory().getItemInMainHand())) {
             vanillaAngling(anglingEvent);
@@ -39,33 +36,38 @@ public class AnglingListener extends ToolUseListener {
 
         if (anglingEvent.getState() != State.CAUGHT_FISH) return;
 
-        this.damageTool(anglingEvent.getPlayer().getInventory().getItemInMainHand(), anglingEvent.getPlayer());
+        damageTool(anglingEvent.getPlayer().getInventory().getItemInMainHand(), anglingEvent.getPlayer(), 1);
+
+        boolean openWater = anglingEvent.getHook().isInOpenWater();
+
+        ItemStack reward = rewardGenerator.giveReward(false,
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
+
+        if (reward == null) {
+            reward = new ItemStack(Material.AIR);
+            anglingEvent.setExpToDrop(0);
+        }
 
         Item itemEntity = (Item) anglingEvent.getCaught();
 
-        itemEntity.setItemStack(rewardGenerator.giveReward(false,
-                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation())));
+        itemEntity.setItemStack(reward);
     }
 
     private void vanillaAngling(PlayerFishEvent anglingEvent) {
         if (anglingEvent.getState() != State.CAUGHT_FISH) return;
 
-        Item itemEntity = (Item) anglingEvent.getCaught();
+        boolean openWater = anglingEvent.getHook().isInOpenWater();
 
-        itemEntity.setItemStack(new ItemStack(Material.NAUTILUS_SHELL));
-    }
+        ItemStack reward = rewardGenerator.giveReward(true,
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
 
-    protected void damageTool(ItemStack usedItem, Player player) {
-        ItemMeta usedItemMeta = toolUse(new NamespacedKey(plugin, tools.getDefaultToolPaths()[1] + "_durability"),
-                new NamespacedKey(plugin, tools.getDefaultToolPaths()[1] + "_max_durability"),
-                usedItem);
-
-        if (usedItemMeta == null) {
-            player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-            usedItem.subtract();
-            return;
+        if (reward == null) {
+            reward = new ItemStack(Material.AIR);
+            anglingEvent.setExpToDrop(0);
         }
 
-        usedItem.setItemMeta(usedItemMeta);
+        Item itemEntity = (Item) anglingEvent.getCaught();
+
+        itemEntity.setItemStack(reward);
     }
 }

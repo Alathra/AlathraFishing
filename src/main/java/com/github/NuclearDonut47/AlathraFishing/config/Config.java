@@ -14,10 +14,13 @@ public final class Config {
     private static ConfigurationSection vanillaSection;
     private static ConfigurationSection recipesSection;
     private static ConfigurationSection fishSection;
+    private static ConfigurationSection miscLootSection;
     private static ConfigurationSection biomesSection;
+    private static ConfigurationSection distributionSection;
     private static UUID fishermanNPCUUID;
     private static String packExtension;
-    private static ConfigurationSection devModeSection;
+    private static boolean devMode;
+    private static ConfigurationSection vanillaBiomesSection;
 
     public Config(AlathraFishing pluginInstance, FileConfiguration configInstance) {
         plugin = pluginInstance;
@@ -26,10 +29,13 @@ public final class Config {
         vanillaSection = configInstance.getConfigurationSection("vanilla");
         recipesSection = configInstance.getConfigurationSection("recipes");
         fishSection = configInstance.getConfigurationSection("fish");
+        miscLootSection = configInstance.getConfigurationSection("misc_loot");
         biomesSection = configInstance.getConfigurationSection("biomes");
-        fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
+        distributionSection = configInstance.getConfigurationSection("distribution");
         packExtension = configInstance.getString("pack_extension");
-        devModeSection = configInstance.getConfigurationSection("dev_mode");
+        fishermanNPCUUID = UUID.fromString(configInstance.getString("fisherman_uuid"));
+        devMode = configInstance.getBoolean("dev_mode", false);
+        vanillaBiomesSection = configInstance.getConfigurationSection("vanilla_biomes");
     }
 
     public void reloadConfig() {
@@ -55,19 +61,31 @@ public final class Config {
         return fishSection;
     }
 
+    public ConfigurationSection getMiscLootSection() {
+        return miscLootSection;
+    }
+
     public ConfigurationSection getBiomesSection() {
         return biomesSection;
     }
 
-    public UUID getFishermanNPCUUID() {
-        return fishermanNPCUUID;
+    public ConfigurationSection getDistributionSection() {
+        return distributionSection;
     }
 
     public String getPackExtension() {
         return packExtension;
     }
 
-    public ConfigurationSection getDevModeSection() {
-        return devModeSection;
+    public UUID getFishermanNPCUUID() {
+        return fishermanNPCUUID;
+    }
+
+    public boolean getDevMode() {
+        return devMode;
+    }
+
+    public ConfigurationSection getVanillaBiomesSection() {
+        return vanillaBiomesSection;
     }
 }

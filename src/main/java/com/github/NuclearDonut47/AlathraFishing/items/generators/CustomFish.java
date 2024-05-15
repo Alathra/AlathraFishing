@@ -1,7 +1,7 @@
-package com.github.NuclearDonut47.AlathraFishing.items;
+package com.github.NuclearDonut47.AlathraFishing.items.generators;
 
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
-import org.bukkit.Material;
+import com.github.NuclearDonut47.AlathraFishing.items.Fish;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -15,25 +15,25 @@ public class CustomFish {
         ConfigurationSection fishSection = config.getFishSection();
 
         if (fishSection == null)
-            plugin.getServer().getLogger().info("fish section is missing from config.yml. " + defaultMessage);
+            plugin.getLogger().info("fish section is missing from config.yml. " + defaultMessage);
 
         for (String fishPath : fishSection.getKeys(false)) {
             boolean necessaryInfoMissing = false;
 
             if (fishSection.getConfigurationSection(fishPath).getString("name") == null) {
-                plugin.getServer().getLogger().info("Missing name at fish." + fishPath + "." + defaultMessage);
+                plugin.getLogger().info("Missing name at fish." + fishPath + "." + defaultMessage);
                 necessaryInfoMissing = true;
             }
 
             if (fishSection.getConfigurationSection(fishPath).getString("item") == null) {
-                plugin.getServer().getLogger().info("Missing item at fish." + fishPath + "." + defaultMessage);
+                plugin.getLogger().info("Missing item at fish." + fishPath + "." + defaultMessage);
                 necessaryInfoMissing = true;
             }
 
             int model = modelCheck(fishSection.getConfigurationSection(fishPath));
 
             if (model == -1) {
-                plugin.getServer().getLogger().info("Missing model at fish." + fishPath + "." + defaultMessage);
+                plugin.getLogger().info("Missing model at fish." + fishPath + "." + defaultMessage);
                 necessaryInfoMissing = true;
             }
 
@@ -42,14 +42,7 @@ public class CustomFish {
 
             if (necessaryInfoMissing) return;
 
-            fish.add(new Fish(plugin, fishPath, fishSection.getConfigurationSection(fishPath).getString("name"),
-                    Material.valueOf(fishSection.getConfigurationSection(fishPath).getString("item")),
-                    fishSection.getConfigurationSection(fishPath).getString("lore"),
-                    fishSection.getConfigurationSection(fishPath).getDouble("common_length"),
-                    fishSection.getConfigurationSection(fishPath).getDouble("max_length"), model,
-                    fishSection.getConfigurationSection(fishPath).getString("rarity"),
-                    fishSection.getConfigurationSection(fishPath).getBoolean("net_loot"),
-                    config.getConfig().getConfigurationSection("weight.fish").getInt(fishPath, 0),
+            fish.add(new Fish(plugin, fishPath, fishSection.getConfigurationSection(fishPath), model,
                     config.getConfig().getDouble("min_fish_length"),
                     config.getConfig().getConfigurationSection("stretch").getInt(
                             fishSection.getConfigurationSection(fishPath).getString("rarity"), 0)));

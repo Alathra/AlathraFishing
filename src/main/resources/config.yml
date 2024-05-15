@@ -1,29 +1,34 @@
 # AlathraFishing.yml
 # Created by NuclearDonut47 for the Minecraft server Alathra.
+version: 0.3.2
 
 # Do NOT change the section names in this config. It does not load saved defaults.
 # Deleting or changing section names in this config will break the plugin until either
-# the affected sections are restored or the config is replaced by the default available on Github.
+# the affected sections are restored or the config is replaced by the default available on GitHub.
 
 # Tools used in plugin.
 # The items used for tools may only be items with nonzero durability.
-# Changing tool items to other tools other than their defaults will allow them to be used as the tools they retexture.
+# Changing tool items to other tools other than their defaults will allow them to be used as the tools they re-texture.
 # Future releases of this plugin will aim to account for this,
 # in case your server uses the default tools for something else through another plugin.
 # As a general note, enchantments will not work for these items.
 # Instead, the goal is for this plugin to eventually have fishing rods receive the benefits of enchantment through
 # interacting with its unique features more specifically.
 
+# This version of the plugin will not work correctly if custom tools are added using a bow item with no model override.
+# This version of the plugin will also not work correctly if misc_loot contains fishing rods and the items for the
+# net and custom_fishing_rod are not FISHING_ROD items.
+
 tools:
   net:
     name: "Alathran Net" # Default "Net"
     item: "FISHING_ROD"
-    model: 1 # Default 1
+    model: 47000 # Default 1
     durability: 64 # Default 64
   custom_fishing_rod:
     name: "Alathran Fishing Rod" # Default "Fishing Rod"
     item: "FISHING_ROD" # Will not work unless set to fishing rod, either. Do not change.
-    model: 0 # Default 0
+    model: 47100 # Default 0
     durability: 64 # Default 64
 
 # If there are existing vanilla tools on your server that you don't want to replace the functionality of,
@@ -72,18 +77,23 @@ recipes:
     fishing_rod: true
 
 # The only necessary attributes for fish are its name, item, and model.
+# If an item is not provided, the item will default to SALMON.
+# The item string much match a Material enum from the API.
+
+# Fish provided without lore will not have a lore message on them.
+# The default is for the lore to give a scientific name, but this can be whatever you want.
 # Fish provided without lore will not have lore on them.
 # Fish without max lengths provided will be given a length equal to the minimum fish length (see below).
 # Fish without common lengths provided will be assumed to have a common length
 # that is the maximum between the minimum fish length (see below) and half the max length rounded down.
 # Default values will be used if these lengths values also don't make sense (they're negative) or
-# Default rarity is common.
+# Default rarity is abundant.
 # Default for net loot is false.
 
 # Fish lengths are calculated and returned based on a binomial distribution using
 # average and max lengths found in nature.
 # Lengths are displayed and saved in this config in centimeters, but only calculated to millimeter precision.
-# There is also an overriding minumum length that can be set for all fish. By default, this length is 30 mm.
+# There is also an overriding minimum length that can be set for all fish. By default, this length is 30 mm.
 # Lengths reaching the max length have a half chance of adding an extra millimeter to the length.
 # If an extra millimeter is added in that case,
 # then there is another half chance to add another millimeter, ad infinitum.
@@ -91,22 +101,94 @@ recipes:
 
 # If the minimum fish length is not a double greater than 0,
 # then any fish that is missing its dimensions will be spawned without a length.
-# Any fish with its proper dimensions will be generated under the assumption that the minimum length is 0.1 cm
+# Any fish with its proper dimensions will be generated under the assumption that the minimum length is 3.0 cm
 # if the minimum fish length is not a double greater than 0.
+
+# The weight value corresponds to the relative weight of getting a particular fish or item in its rarity group.
+# Not having a value here for a fish corresponds to the fish never being obtainable.
 
 min_fish_length: 3.0
 
 fish:
   bluegill:
     name: "Alathran Bluegill"
-    item: "COD"
-    lore: "Lepomis Macrochirus"
-    common_length: 19.1 # Default 19.1
-    max_length: 41.0 # Default 41.0
-    no_model: false # Default false
-    model: 47000 # Default 1
+    item: "SALMON"
+    lore: "Lepomis macrochirus"
+    common_length: 19.1
+    max_length: 41.0
+    no_model: false
+    model: 47000
     rarity: abundant
-    net_loot: false
+  common_carp:
+    name: "Alathran Common Carp"
+    item: "SALMON"
+    lore: "Cyprinus carpio"
+    common_length: 31.0
+    max_length: 120.0
+    no_model: false
+    model: 47001
+    rarity: abundant
+  channel_catfish:
+    name: "Alathran Channel Catfish"
+    item: "SALMON"
+    lore: "Ictalurus punctatus"
+    common_length: 19.1
+    max_length: 41.0
+    no_model: false
+    model: 47002
+    rarity: abundant
+  atlantic_mackerel:
+    name: "Alathran Atlantic Mackerel"
+    item: "COD"
+    lore: "Scomber scombrus"
+    common_length: 19.1
+    max_length: 41.0
+    no_model: false
+    model: 47000
+    rarity: abundant
+  striped_bass:
+    name: "Alathran Striped Bass"
+    item: "SALMON"
+    lore: "Morone saxatilis"
+    common_length: 19.1
+    max_length: 41.0
+    no_model: false
+    model: 47003
+    rarity: abundant
+  bluefish:
+    name: "Alathran Bluefish"
+    item: "COD"
+    lore: "Pomatomus saltatrix"
+    common_length: 19.1
+    max_length: 41.0
+    no_model: false
+    model: 47001
+    rarity: abundant
+
+# Potions will not work for misc loot. Any potion will be a water bottle.
+
+misc_loot:
+  cod: "COD"
+  salmon: "SALMON"
+  tropical_fish: "TROPICAL_FISH"
+  pufferfish: "PUFFERFISH"
+  bow: "BOW"
+  book: "BOOK"
+  fishing_rod: "FISHING_ROD"
+  name_tag: "NAME_TAG"
+  nautilus_shell: "NAUTILUS_SHELL"
+  saddle: "SADDLE"
+  lily_pad: "LILY_PAD"
+  bowl: "BOWL"
+  leather: "LEATHER"
+  leather_boots: "LEATHER_BOOTS"
+  rotten_flesh: "ROTTEN_FLESH"
+  stick: "STICK"
+  string: "STRING"
+  water_bottle: "POTION"
+  bone: "BONE"
+  ink_sac: "INK_SAC"
+  tripwire_hook: "TRIPWIRE_HOOK"
 
 # DO NOT CHANGE THESE STRETCH PARAMETERS UNLESS YOU KNOW WHAT YOU'RE DOING. DO SO AT YOUR OWN RISK.
 # The stretch parameters are a means of controlling the difference in likelihood
@@ -132,19 +214,121 @@ fish:
 stretch:
   abundant: 0
 
-# The relative weight of getting a particular fish or item in its rarity group.
-# Not having a value here for a fish corresponds to the fish never being obtainable.
-
-weight:
-  fish:
-    bluegill: 1
+# If you put a biome string in both freshwater and saltwater biome lists,
+# the plugin will default to considering the biome as saltwater.
 
 biomes:
+  freshwater:
+    - "caldera_volcano_pit"
+    - "dry_temperate_white_mountains_river"
+    - "mangrove_swamp"
+    - "mountains_river"
+    - "river"
+    - "snowy_terraced_mountains_river"
+    - "swamp"
+    - "temperate_mountains_river"
+  saltwater:
+    - "cold_ocean"
+    - "cold_deep_ocean"
+    - "coral_ocean"
+    - "deep_ocean"
+    - "deep_ocean_trench"
+    - "frozen_deep_ocean"
+    - "iceberg_ocean"
+    - "ocean"
+    - "palm_beach"
+    - "subtropical_ocean"
+    - "subtropical_deep_ocean"
+    - "tropical_ocean"
+    - "tropical_deep_ocean"
+
+# Inland will account for rewards for fishing outside designated freshwater and saltwater biomes.
+
+distribution:
   net:
+    freshwater:
+      cod: 510
+      salmon: 213
+      tropical_fish: 17
+      pufferfish: 111
+      bow: 8
+      book: 8
+      fishing_rod: 10
+      name_tag: 8
+      nautilus_shell: 8
+      saddle: 8
+      lily_pad: 17
+      bowl: 10
+      leather: 10
+      leather_boots: 10
+      rotten_flesh: 10
+      stick: 5
+      string: 5
+      water_bottle: 10
+      bone: 10
+      ink_sac: 1
+      tripwire_hook: 10
+    saltwater:
+      cod: 510
+      salmon: 213
+      tropical_fish: 17
+      pufferfish: 111
+      bow: 8
+      book: 8
+      fishing_rod: 10
+      name_tag: 8
+      nautilus_shell: 8
+      saddle: 8
+      lily_pad: 17
+      bowl: 10
+      leather: 10
+      leather_boots: 10
+      rotten_flesh: 10
+      stick: 5
+      string: 5
+      water_bottle: 10
+      bone: 10
+      ink_sac: 1
+      tripwire_hook: 10
+    inland:
+      cod: 510
+      salmon: 213
+      tropical_fish: 17
+      pufferfish: 111
+      bow: 8
+      book: 8
+      fishing_rod: 10
+      name_tag: 8
+      nautilus_shell: 8
+      saddle: 8
+      lily_pad: 17
+      bowl: 10
+      leather: 10
+      leather_boots: 10
+      rotten_flesh: 10
+      stick: 5
+      string: 5
+      water_bottle: 10
+      bone: 10
+      ink_sac: 1
+      tripwire_hook: 10
+  abundant:
+    freshwater:
+      bluegill: 2
+      common_carp: 2
+      channel_catfish: 2
+      striped_bass: 1
+    saltwater:
+      atlantic_mackerel: 1
+      striped_bass: 1
+      bluefish: 1
+    inland:
+      bluegill: 1
+      common_carp: 1
+      channel_catfish: 1
 
-
-# The pack extension in order to detect Terra biomes
-pack_extension: "terra:overworld/overworld/"
+# String in front of biome names for biome detection through Terra.
+pack_extension: "terra:alathra/alathra/"
     
 # Optional Hooks
 
@@ -152,6 +336,24 @@ pack_extension: "terra:overworld/overworld/"
 fisherman_uuid: "f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454"
 
 # Do not enable this on the main server.
-dev_mode:
-  dev_mode_on: true
-  vanilla_biomes: true
+dev_mode: false
+
+vanilla_biomes:
+  freshwater:
+    - "mangrove_swamp"
+    - "frozen_river"
+    - "swamp"
+    - "river"
+  saltwater:
+    - "cold_ocean"
+    - "deep_frozen_ocean"
+    - "deep_lukewarm_ocean"
+    - "deep_ocean"
+    - "stony_shore"
+    - "deep_cold_ocean"
+    - "warm_ocean"
+    - "frozen_ocean"
+    - "beach"
+    - "snowy_beach"
+    - "lukewarm_ocean"
+    - "ocean"

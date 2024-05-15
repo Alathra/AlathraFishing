@@ -1,18 +1,15 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
-import com.github.NuclearDonut47.AlathraFishing.items.CustomMiscLoot;
-import com.github.NuclearDonut47.AlathraFishing.listeners.StickListener;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLoot;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomFish;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFish;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.AnvilListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.EnchantmentListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.AnglingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.NetListener;
 import com.github.NuclearDonut47.AlathraFishing.recipes.Recipes;
-import com.github.NuclearDonut47.AlathraFishing.util.Biomes;
 
-import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +18,7 @@ import com.github.NuclearDonut47.AlathraFishing.commands.AlathraFishingCommands;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.CitizensRightClickNPCListener;
 import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.NPCUUIDCommands;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
 
 import java.util.ArrayList;
 
@@ -30,7 +27,7 @@ public class AlathraFishing extends JavaPlugin {
     private void initHooks(Config config) {
         // Check if the server is running Citizens, init citizens related classes
         if (Bukkit.getServer().getPluginManager().getPlugin("Citizens") != null)  {
-            Bukkit.getLogger().info("[" + this.getName() + "] Citizens detected! Enabling support...");
+            getLogger().info("[" + this.getName() + "] Citizens detected! Enabling support...");
             Bukkit.getServer().getPluginManager().registerEvents(new CitizensRightClickNPCListener(config), this);
             new NPCUUIDCommands(this);
         }
@@ -45,17 +42,9 @@ public class AlathraFishing extends JavaPlugin {
 
         CustomTools tools = new CustomTools(this, config);
         CustomFish fish = new CustomFish(this, config);
-        CustomMiscLoot miscLoot = new CustomMiscLoot();
+        CustomMiscLoot miscLoot = new CustomMiscLoot(this, config);
 
-        RewardGenerator rewardGenerator = new RewardGenerator(fish, miscLoot, config);
-
-        Biomes biomes = null;
-
-        if (Bukkit.getServer().getPluginManager().getPlugin("Terra") != null) biomes = new Biomes(config);
-
-        for (String biomeString : RTUBiomeLib.getInterface().getBiomesAsString()) {
-            getLogger().info(biomeString);
-        }
+        RewardGenerator rewardGenerator = new RewardGenerator(this, config, tools, fish, miscLoot);
 
         ArrayList<AlathraFishingListener> alathraFishingListeners = new ArrayList<>();
 
@@ -63,9 +52,6 @@ public class AlathraFishing extends JavaPlugin {
         alathraFishingListeners.add(new AnglingListener(this, tools, rewardGenerator));
         alathraFishingListeners.add(new EnchantmentListener(this, tools));
         alathraFishingListeners.add(new AnvilListener(this, tools));
-
-        if (config.getDevModeSection().getBoolean("dev_mode_on"))
-            alathraFishingListeners.add(new StickListener(this));
 
         for (AlathraFishingListener listener: alathraFishingListeners) listener.registerListener();
 

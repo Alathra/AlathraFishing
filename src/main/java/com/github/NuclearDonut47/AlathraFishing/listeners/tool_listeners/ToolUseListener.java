@@ -2,12 +2,12 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public abstract class ToolUseListener extends AlathraFishingListener {
@@ -21,7 +21,7 @@ public abstract class ToolUseListener extends AlathraFishingListener {
     protected final boolean customToolCheck(int index, ItemStack item) {
         if (item == null) return false;
 
-        if (item.getType() != tools.getBaseItems()[index]) return false;
+        if (item.getType() != tools.getBaseItems().get(index)) return false;
 
         int itemModel = 0;
 
@@ -33,10 +33,12 @@ public abstract class ToolUseListener extends AlathraFishingListener {
         return tools.getModelOverrides()[index] == itemModel;
     }
 
-    protected abstract void damageTool(ItemStack usedItem, Player player);
-
-    protected final ItemMeta toolUse(NamespacedKey durKey, NamespacedKey maxKey, ItemStack item) {
+    protected void damageTool(ItemStack item, Player player, int index) {
         Damageable damageable = (Damageable) item.getItemMeta();
+        boolean broken = false;
+
+        NamespacedKey durKey = new NamespacedKey(plugin, tools.getDefaultToolPaths()[index] + "_durability");
+        NamespacedKey maxKey = new NamespacedKey(plugin, tools.getDefaultToolPaths()[index] + "_max_durability");
 
         int durability = damageable.getPersistentDataContainer().get(durKey, PersistentDataType.INTEGER);
         int maxDurability = damageable.getPersistentDataContainer().get(maxKey, PersistentDataType.INTEGER);
@@ -44,7 +46,7 @@ public abstract class ToolUseListener extends AlathraFishingListener {
         durability--;
 
         if (durability == 0) {
-            return null;
+            broken = true;
         }
 
         int damage = (int) ((1 - ((double) durability / maxDurability)) * item.getType().getMaxDurability());
@@ -52,6 +54,12 @@ public abstract class ToolUseListener extends AlathraFishingListener {
         damageable.setDamage(damage);
         damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durability);
 
-        return damageable;
+        if (broken) {
+            player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            item.subtract();
+            return;
+        }
+
+        item.setItemMeta(damageable);
     }
 }

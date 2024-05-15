@@ -1,7 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.recipes;
 
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

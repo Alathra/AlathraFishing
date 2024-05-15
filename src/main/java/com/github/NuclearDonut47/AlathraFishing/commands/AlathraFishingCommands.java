@@ -1,7 +1,5 @@
 package com.github.NuclearDonut47.AlathraFishing.commands;
 
-import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

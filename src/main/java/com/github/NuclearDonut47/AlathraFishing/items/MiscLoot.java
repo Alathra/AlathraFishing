@@ -1,22 +1,39 @@
 package com.github.NuclearDonut47.AlathraFishing.items;
 
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 
 public class MiscLoot extends Loot {
-    private final boolean netLoot;
+    private static Plugin plugin;
+    private final Material item;
 
-    public MiscLoot(int weightInstance, boolean netLootInstance) {
-        super(weightInstance);
-        netLoot = netLootInstance;
+    public MiscLoot(Plugin pluginInstance, String identifier, ConfigurationSection miscLootSection) {
+        super(identifier);
+        plugin = pluginInstance;
+
+        if (Material.getMaterial(miscLootSection.getString(identifier)) != null) {
+            item = Material.getMaterial(miscLootSection.getString(identifier));
+        } else {
+            item = Material.STICK;
+        }
     }
 
-    @Override
-    public boolean isNetLoot(){
-        return netLoot;
-    }
+    public ItemStack generateLootStack() {
+        ItemStack miscLoot = new ItemStack(item);
 
-    @Override
-    public ItemStack getLootStack() {
-        return null;
+        ItemMeta miscLootMeta = miscLoot.getItemMeta();
+
+        NamespacedKey idKey = new NamespacedKey(plugin, "identifier");
+        NamespacedKey rarityKey = new NamespacedKey(plugin, "rarity");
+
+        miscLootMeta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, identifier);
+        miscLootMeta.getPersistentDataContainer().set(rarityKey, PersistentDataType.STRING, "miscellaneous");
+
+        return miscLoot;
     }
 }

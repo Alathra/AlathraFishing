@@ -1,4 +1,4 @@
-package com.github.NuclearDonut47.AlathraFishing.items;
+package com.github.NuclearDonut47.AlathraFishing.items.generators;
 
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import net.kyori.adventure.text.Component;
@@ -14,12 +14,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CustomTools {
     private static Plugin plugin;
     private static final String[] defaultToolPaths = {"net", "custom_fishing_rod"};
-    private static final Material[] baseItems = {Material.FISHING_ROD, Material.FISHING_ROD};
+    private static final ArrayList<Material> baseItems =
+            new ArrayList<>(List.of(Material.FISHING_ROD, Material.FISHING_ROD));
     private static final String[] names = {"Net", "Fishing Rod"};
     private static final int[] modelOverrides = {1, 2};
     private static final int[] durabilities = {64, 64};
@@ -33,22 +36,21 @@ public class CustomTools {
         ConfigurationSection vanillaSection = config.getVanillaSection();
 
         if (toolsSection == null) {
-            plugin.getServer().getLogger().info("tools section is missing from config.yml. " + defaultMessage);
+            plugin.getLogger().info("tools section is missing from config.yml. " + defaultMessage);
             return;
         }
 
         for (int a = 0; a < defaultToolPaths.length; a++) {
             if (!toolsSection.contains(defaultToolPaths[a])) {
-                plugin.getServer().getLogger().info(defaultToolPaths[a] +
-                        " section is missing from tools section in config.yml. " +
-                        defaultMessage);
+                plugin.getLogger().info(defaultToolPaths[a] +
+                        " section is missing from tools section in config.yml. " + defaultMessage);
                 continue;
             }
 
             ConfigurationSection toolData = toolsSection.getConfigurationSection(defaultToolPaths[a]);
 
             if (toolData == null) {
-                plugin.getServer().getLogger().info(defaultToolPaths[a] +
+                plugin.getLogger().info(defaultToolPaths[a] +
                         " section is missing from tools section in config.yml. " +
                         defaultMessage);
                 continue;
@@ -61,12 +63,12 @@ public class CustomTools {
         }
 
         if (vanillaSection == null) {
-            plugin.getServer().getLogger().info("vanilla section is missing from config.yml. " + defaultMessage);
+            plugin.getLogger().info("vanilla section is missing from config.yml. " + defaultMessage);
             return;
         }
 
         if (!vanillaSection.contains("fishing_rod")) {
-            plugin.getServer().getLogger().info("fishing_rod section is missing from vanilla section of config.yml" +
+            plugin.getLogger().info("fishing_rod section is missing from vanilla section of config.yml" +
                     defaultMessage);
         }
 
@@ -78,7 +80,7 @@ public class CustomTools {
         final String baseItem = toolData.getString("item");
 
         if (baseItem == null) {
-            plugin.getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. "
+            plugin.getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. "
                     + defaultMessage);
             return;
         }
@@ -86,25 +88,25 @@ public class CustomTools {
         final Material material = Material.getMaterial(baseItem);
 
         if (material == null) {
-            plugin.getServer().getLogger().info("value at " + defaultToolPaths[a] +
+            plugin.getLogger().info("value at " + defaultToolPaths[a] +
                     ".item in config.yml is not a valid Material enum. " + defaultMessage);
             return;
         }
 
         if (material.getMaxDurability() == 0) {
-            plugin.getServer().getLogger().info("item given at " + defaultToolPaths[a] +
+            plugin.getLogger().info("item given at " + defaultToolPaths[a] +
                     ".item in config.yml is not an item with durability. " + defaultMessage);
             return;
         }
 
-        baseItems[a] = material;
+        baseItems.set(a, material);
     }
 
     private void setName(ConfigurationSection toolData, int a) {
         String name = toolData.getString("name");
 
         if (name == null) {
-            plugin.getServer().getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " +
+            plugin.getLogger().info(defaultToolPaths[a] + ".name section is missing from config.yml. " +
                     defaultMessage);
             return;
         }
@@ -116,11 +118,11 @@ public class CustomTools {
         int modelOverride = toolData.getInt("model");
 
         for (int b = 0; b < a; b++) {
-            if (baseItems[b] != baseItems[a]) continue;
+            if (baseItems.get(b) != baseItems.get(a)) continue;
 
             if (modelOverrides[b] != modelOverrides[a]) continue;
 
-            plugin.getServer().getLogger().info("item and model are the same for " + defaultToolPaths[b] + " and " +
+            plugin.getLogger().info("item and model are the same for " + defaultToolPaths[b] + " and " +
                     defaultToolPaths[a] + ". CustomModelData for " + defaultToolPaths[a] + " will now be " +
                     (modelOverride + 1) + ".");
             modelOverride++;
@@ -134,7 +136,7 @@ public class CustomTools {
         final int durability = toolData.getInt("durability");
 
         if (durability <= 0) {
-            plugin.getServer().getLogger().info(defaultToolPaths[a] +
+            plugin.getLogger().info(defaultToolPaths[a] +
                     ".durability section is either 0 or missing from config.yml." + defaultMessage);
             return;
         }
@@ -164,11 +166,11 @@ public class CustomTools {
         }
 
         if (!(-1 < toolVal)) {
-            plugin.getServer().getLogger().info("Invalid String used to call tool in CustomItems.getTool().");
+            plugin.getLogger().info("Invalid String used to call tool in CustomItems.getTool().");
             return null;
         }
 
-        ItemStack customItem = new ItemStack(baseItems[toolVal]);
+        ItemStack customItem = new ItemStack(baseItems.get(toolVal));
         Damageable damageable = (Damageable) customItem.getItemMeta();
 
         Component name = ColorParser.of(names[toolVal]).build();
@@ -199,7 +201,7 @@ public class CustomTools {
         item.setItemMeta(itemMeta);
     }
 
-    public Material[] getBaseItems(){
+    public ArrayList<Material> getBaseItems(){
         return baseItems;
     }
 

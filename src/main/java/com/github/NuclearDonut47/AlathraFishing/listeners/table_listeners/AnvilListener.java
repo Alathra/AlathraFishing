@@ -1,7 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.items.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -18,7 +18,7 @@ public final class AnvilListener extends AlathraFishingListener {
         tools = toolsInstance;
     }
 
-    @EventHandler(priority = EventPriority.HIGH) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
     public void removeEnchanting(PrepareAnvilEvent prepEvent) {
         AnvilInventory anvil = prepEvent.getInventory();
 
@@ -61,7 +61,7 @@ public final class AnvilListener extends AlathraFishingListener {
 
     private boolean invalidToolCheck(Material item, int model) {
         for (int a = 0; a < tools.getDefaultToolPaths().length; a++) {
-            if (item != tools.getBaseItems()[a]) continue;
+            if (item != tools.getBaseItems().get(a)) continue;
 
             if (model != tools.getModelOverrides()[a]) continue;
 
