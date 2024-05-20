@@ -21,7 +21,7 @@ public class AnglingListener extends ToolUseListener {
         rewardGenerator = rewardGeneratorInstance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void anglingFishing(PlayerFishEvent anglingEvent) {
         if (!customToolCheck(1, anglingEvent.getPlayer().getInventory().getItemInMainHand())) {
             vanillaAngling(anglingEvent);
@@ -41,7 +41,7 @@ public class AnglingListener extends ToolUseListener {
         boolean openWater = anglingEvent.getHook().isInOpenWater();
 
         ItemStack reward = rewardGenerator.giveReward(false,
-                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), true);
 
         if (reward == null) {
             reward = new ItemStack(Material.AIR);
@@ -56,10 +56,8 @@ public class AnglingListener extends ToolUseListener {
     private void vanillaAngling(PlayerFishEvent anglingEvent) {
         if (anglingEvent.getState() != State.CAUGHT_FISH) return;
 
-        boolean openWater = anglingEvent.getHook().isInOpenWater();
-
         ItemStack reward = rewardGenerator.giveReward(true,
-                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), true);
 
         if (reward == null) {
             reward = new ItemStack(Material.AIR);

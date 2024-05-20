@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class Recipes {
     private static RecipeBuilder recipeBuilder;
@@ -23,6 +24,16 @@ public final class Recipes {
     }
 
     public void addRecipes() {
+        ArrayList<RecipeChoice> salmonRecipeIngredient =
+                new ArrayList<>(List.of(new RecipeChoice.MaterialChoice(Material.SALMON)));
+        ArrayList<RecipeChoice> codRecipeIngredient =
+                new ArrayList<>(List.of(new RecipeChoice.MaterialChoice(Material.COD)));
+
+        recipeBuilder.create(false, "salmonLength", new ItemStack(Material.SALMON))
+                .addIngredients(salmonRecipeIngredient).build();
+        recipeBuilder.create(false, "codLength", new ItemStack(Material.COD))
+                .addIngredients(codRecipeIngredient).build();
+
         for (String recipePath : recipesSection.getConfigurationSection("crafting").getKeys(false)) {
             ConfigurationSection recipe = recipesSection.getConfigurationSection("crafting." + recipePath);
 

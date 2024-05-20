@@ -24,7 +24,7 @@ public class CustomTools {
     private static final ArrayList<Material> baseItems =
             new ArrayList<>(List.of(Material.FISHING_ROD, Material.FISHING_ROD));
     private static final String[] names = {"Net", "Fishing Rod"};
-    private static final int[] modelOverrides = {1, 2};
+    private static final ArrayList<Integer> modelOverrides = new ArrayList<>(List.of(1, 2));
     private static final int[] durabilities = {64, 64};
     private static final String defaultMessage = "Default value(s) is (are) being used.";
     private static final HashMap<Material, Integer> vanillaConversions = new HashMap<>();
@@ -120,7 +120,7 @@ public class CustomTools {
         for (int b = 0; b < a; b++) {
             if (baseItems.get(b) != baseItems.get(a)) continue;
 
-            if (modelOverrides[b] != modelOverrides[a]) continue;
+            if (modelOverrides.get(b).intValue() != modelOverrides.get(a).intValue()) continue;
 
             plugin.getLogger().info("item and model are the same for " + defaultToolPaths[b] + " and " +
                     defaultToolPaths[a] + ". CustomModelData for " + defaultToolPaths[a] + " will now be " +
@@ -129,7 +129,7 @@ public class CustomTools {
             b = 0;
         }
 
-        modelOverrides[a] = modelOverride;
+        modelOverrides.set(a, modelOverride);
     }
 
     private void setDurabilities(ConfigurationSection toolData, int a) {
@@ -145,8 +145,8 @@ public class CustomTools {
     }
 
     private int checkModelOriginality(int candidate) {
-        for (int a = 0; a < modelOverrides.length; a++) {
-            if (candidate != modelOverrides[a]) continue;
+        for (int a = 0; a < modelOverrides.size(); a++) {
+            if (candidate != modelOverrides.get(a)) continue;
 
             candidate++;
             a = 0;
@@ -179,7 +179,7 @@ public class CustomTools {
         NamespacedKey maxKey = new NamespacedKey(plugin, defaultToolPaths[toolVal] + "_max_durability");
 
         damageable.displayName(name);
-        damageable.setCustomModelData(modelOverrides[toolVal]);
+        damageable.setCustomModelData(modelOverrides.get(toolVal));
         damageable.getPersistentDataContainer().set(durKey, PersistentDataType.INTEGER, durabilities[toolVal]);
         damageable.getPersistentDataContainer().set(maxKey, PersistentDataType.INTEGER, durabilities[toolVal]);
         damageable.getPersistentDataContainer().set(vanillaKey, PersistentDataType.BOOLEAN, false);
@@ -205,7 +205,7 @@ public class CustomTools {
         return baseItems;
     }
 
-    public int[] getModelOverrides() {
+    public ArrayList<Integer> getModelOverrides() {
         return modelOverrides;
     }
 

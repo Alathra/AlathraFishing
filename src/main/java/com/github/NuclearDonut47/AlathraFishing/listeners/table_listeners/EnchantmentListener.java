@@ -17,7 +17,7 @@ public class EnchantmentListener extends AlathraFishingListener {
         tools = toolsInstance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void removeEnchants(PrepareItemEnchantEvent prepEvent) {
         Material item = prepEvent.getItem().getType();
         int model = 0;
@@ -28,7 +28,7 @@ public class EnchantmentListener extends AlathraFishingListener {
 
         for (int a = 0; a < tools.getDefaultToolPaths().length; a++) {
             if (item != tools.getBaseItems().get(a)) continue;
-            if (model != tools.getModelOverrides()[a]) continue;
+            if (model != tools.getModelOverrides().get(a)) continue;
 
             invalidItemCheck = false;
             break;

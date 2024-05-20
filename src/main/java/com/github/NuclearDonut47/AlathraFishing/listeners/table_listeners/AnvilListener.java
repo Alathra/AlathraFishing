@@ -18,7 +18,7 @@ public final class AnvilListener extends AlathraFishingListener {
         tools = toolsInstance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void removeEnchanting(PrepareAnvilEvent prepEvent) {
         AnvilInventory anvil = prepEvent.getInventory();
 
@@ -63,7 +63,7 @@ public final class AnvilListener extends AlathraFishingListener {
         for (int a = 0; a < tools.getDefaultToolPaths().length; a++) {
             if (item != tools.getBaseItems().get(a)) continue;
 
-            if (model != tools.getModelOverrides()[a]) continue;
+            if (model != tools.getModelOverrides().get(a)) continue;
 
             return false;
         }

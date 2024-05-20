@@ -84,7 +84,7 @@ public class NetListener extends ToolUseListener {
         rewardGenerator = rewardGeneratorInstance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void netListener(PlayerInteractEvent netEvent) {
         if (netEvent.getHand() != EquipmentSlot.HAND) return;
 
@@ -115,7 +115,7 @@ public class NetListener extends ToolUseListener {
         netPull(netEvent, existingTask);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void midNetItemSwap(InventoryClickEvent clickEvent) {
         if (!(clickEvent.getAction() == InventoryAction.PICKUP_ALL) ||
                 (clickEvent.getAction() == InventoryAction.PICKUP_HALF)) return;
@@ -131,7 +131,7 @@ public class NetListener extends ToolUseListener {
         cancelEvent(existingTask, clickEvent.getCurrentItem());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void midNetDrop(ItemSpawnEvent dropEvent) {
         if (!(customToolCheck(0, dropEvent.getEntity().getItemStack()))) return;
 

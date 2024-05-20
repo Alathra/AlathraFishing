@@ -32,8 +32,6 @@ public class Fish extends Loot {
         name = fishConfig.getString("name");
         lore = fishConfig.getString("lore");
         model = modelInstance;
-
-
         rarity = fishConfig.getString("rarity");
 
         if (Material.getMaterial(fishConfig.getString("item")) != null) {
@@ -108,17 +106,19 @@ public class Fish extends Loot {
 
         fishMeta.displayName(ColorParser.of(name).build());
 
-        fishMeta.lore(List.of(
-                ColorParser.of(lore).build(), ColorParser.of(generateLength() + " cm").build(),
-                ColorParser.of("Abundant Fish").build()));
+        fishMeta.lore(List.of(ColorParser.of(lore).build(), ColorParser.of("Abundant Fish").build()));
 
         fishMeta.setCustomModelData(model);
 
         NamespacedKey idKey = new NamespacedKey(plugin, "identifier");
         NamespacedKey rarityKey = new NamespacedKey(plugin, "rarity");
+        NamespacedKey lengthKey = new NamespacedKey(plugin, "length");
+        NamespacedKey lengthDisplayed = new NamespacedKey(plugin, "lengthDisplayed");
 
         fishMeta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, identifier);
         fishMeta.getPersistentDataContainer().set(rarityKey, PersistentDataType.STRING, rarity);
+        fishMeta.getPersistentDataContainer().set(lengthKey, PersistentDataType.STRING, generateLength() + " cm");
+        fishMeta.getPersistentDataContainer().set(lengthDisplayed, PersistentDataType.BOOLEAN, false);
 
         fish.setItemMeta(fishMeta);
 
@@ -151,5 +151,9 @@ public class Fish extends Loot {
 
             loc++;
         }
+    }
+
+    public int getModel() {
+        return model;
     }
 }

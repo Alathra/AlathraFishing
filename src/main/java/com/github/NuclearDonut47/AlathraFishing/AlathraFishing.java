@@ -1,6 +1,9 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
 import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLoot;
+import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.CraftingListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.SmeltListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.MendingRemovalListener;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFish;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
@@ -52,6 +55,9 @@ public class AlathraFishing extends JavaPlugin {
         alathraFishingListeners.add(new AnglingListener(this, tools, rewardGenerator));
         alathraFishingListeners.add(new EnchantmentListener(this, tools));
         alathraFishingListeners.add(new AnvilListener(this, tools));
+        alathraFishingListeners.add(new MendingRemovalListener(this));
+        alathraFishingListeners.add(new SmeltListener(this, fish));
+        alathraFishingListeners.add(new CraftingListener(this));
 
         for (AlathraFishingListener listener: alathraFishingListeners) listener.registerListener();
 

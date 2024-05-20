@@ -30,7 +30,7 @@ public abstract class ToolUseListener extends AlathraFishingListener {
 
         tools.convertVanillaTool(item, itemModel);
 
-        return tools.getModelOverrides()[index] == itemModel;
+        return tools.getModelOverrides().get(index) == itemModel;
     }
 
     protected void damageTool(ItemStack item, Player player, int index) {
