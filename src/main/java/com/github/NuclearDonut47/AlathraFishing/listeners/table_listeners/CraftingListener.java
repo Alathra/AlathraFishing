@@ -1,6 +1,8 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
+import com.github.NuclearDonut47.AlathraFishing.items.Fish;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
@@ -16,51 +18,40 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
 public class CraftingListener extends AlathraFishingListener {
-    public CraftingListener(AlathraFishing plugin) {
+
+    private CustomFishManager customFishManager;
+
+    public CraftingListener(AlathraFishing plugin, CustomFishManager customFishManager) {
         super(plugin);
+        this.customFishManager = customFishManager;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
-    public void addOrHidLength(PrepareItemCraftEvent craftEvent) {
+    public void applyLengthWeight(PrepareItemCraftEvent craftEvent) {
         CraftingRecipe recipe = (CraftingRecipe) craftEvent.getRecipe();
 
         if (!(recipe.getKey().toString().equals("salmonLength") || recipe.getKey().toString().equals("codLength"))) {
             return;
         }
 
-        NamespacedKey lengthDisplayed = new NamespacedKey(plugin, "lengthDisplayed");
-        NamespacedKey length = new NamespacedKey(plugin, "length");
-
-        if (craftEvent.getInventory().getResult().getItemMeta().getPersistentDataContainer()
-                .get(lengthDisplayed, PersistentDataType.BOOLEAN)) {
-            ItemStack result = craftEvent.getInventory().getResult();
-
-            ItemMeta resultMeta = result.getItemMeta();
-
-            List<Component> resultLore = resultMeta.lore();
-
-            resultMeta.lore(List.of(resultLore.get(0), resultLore.get(2)));
-
-            result.setItemMeta(resultMeta);
-
-            craftEvent.getInventory().setResult(result);
-
-            return;
-        }
+        NamespacedKey key = new NamespacedKey(plugin, "identifier");
 
         ItemStack result = craftEvent.getInventory().getResult();
-
         ItemMeta resultMeta = result.getItemMeta();
+        for (Fish fish : customFishManager.getFishes()) {
+            if (fish.getIdentifier().equals(resultMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING))) {
 
+            }
+        }
         List<Component> resultLore = resultMeta.lore();
-
-        resultMeta.lore(List.of(resultLore.get(0),
-                ColorParser.of(
-                        resultMeta.getPersistentDataContainer().get(length, PersistentDataType.STRING)).build(),
-                resultLore.get(1)));
-
+        resultMeta.lore(
+                List.of(
+                        resultLore.get(0),
+                        ColorParser.of().build(),
+                        resultLore.get(1))
+                );
         result.setItemMeta(resultMeta);
-
         craftEvent.getInventory().setResult(result);
     }
+
 }

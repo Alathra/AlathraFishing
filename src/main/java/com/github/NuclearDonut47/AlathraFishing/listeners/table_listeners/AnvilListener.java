@@ -1,7 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -11,9 +11,9 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.persistence.PersistentDataType;
 
 public final class AnvilListener extends AlathraFishingListener {
-    private static CustomTools tools;
+    private static CustomToolsManager tools;
 
-    public AnvilListener(AlathraFishing pluginInstance, CustomTools toolsInstance) {
+    public AnvilListener(AlathraFishing pluginInstance, CustomToolsManager toolsInstance) {
         super(pluginInstance);
         tools = toolsInstance;
     }

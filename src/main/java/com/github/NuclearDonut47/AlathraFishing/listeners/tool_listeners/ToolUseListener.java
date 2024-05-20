@@ -2,7 +2,7 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -11,9 +11,9 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.persistence.PersistentDataType;
 
 public abstract class ToolUseListener extends AlathraFishingListener {
-    protected final CustomTools tools;
+    protected final CustomToolsManager tools;
 
-    protected ToolUseListener(AlathraFishing plugin, CustomTools toolsInstance) {
+    protected ToolUseListener(AlathraFishing plugin, CustomToolsManager toolsInstance) {
         super(plugin);
         tools = toolsInstance;
     }

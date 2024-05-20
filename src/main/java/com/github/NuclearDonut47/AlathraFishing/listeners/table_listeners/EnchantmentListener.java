@@ -1,6 +1,6 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -10,9 +10,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 public class EnchantmentListener extends AlathraFishingListener {
-    private static CustomTools tools;
+    private static CustomToolsManager tools;
 
-    public EnchantmentListener(Plugin plugin, CustomTools toolsInstance) {
+    public EnchantmentListener(Plugin plugin, CustomToolsManager toolsInstance) {
         super(plugin);
         tools = toolsInstance;
     }

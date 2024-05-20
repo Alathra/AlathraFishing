@@ -1,11 +1,11 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLoot;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLootManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.CraftingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.SmeltListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.MendingRemovalListener;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFish;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.AnvilListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.EnchantmentListener;
@@ -21,7 +21,7 @@ import com.github.NuclearDonut47.AlathraFishing.commands.AlathraFishingCommands;
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
 import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.CitizensRightClickNPCListener;
 import com.github.NuclearDonut47.AlathraFishing.hooks.citizens.NPCUUIDCommands;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 
 import java.util.ArrayList;
 
@@ -43,9 +43,9 @@ public class AlathraFishing extends JavaPlugin {
         FileConfiguration fileConfig = this.getConfig();
         Config config = new Config(this, fileConfig);
 
-        CustomTools tools = new CustomTools(this, config);
-        CustomFish fish = new CustomFish(this, config);
-        CustomMiscLoot miscLoot = new CustomMiscLoot(this, config);
+        CustomToolsManager tools = new CustomToolsManager(this, config);
+        CustomFishManager fish = new CustomFishManager(this, config);
+        CustomMiscLootManager miscLoot = new CustomMiscLootManager(this, config);
 
         RewardGenerator rewardGenerator = new RewardGenerator(this, config, tools, fish, miscLoot);
 
@@ -57,7 +57,7 @@ public class AlathraFishing extends JavaPlugin {
         alathraFishingListeners.add(new AnvilListener(this, tools));
         alathraFishingListeners.add(new MendingRemovalListener(this));
         alathraFishingListeners.add(new SmeltListener(this, fish));
-        alathraFishingListeners.add(new CraftingListener(this));
+        alathraFishingListeners.add(new CraftingListener(this, fish));
 
         for (AlathraFishingListener listener: alathraFishingListeners) listener.registerListener();
 
