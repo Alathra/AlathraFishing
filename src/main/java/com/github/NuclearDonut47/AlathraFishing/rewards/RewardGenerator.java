@@ -1,10 +1,10 @@
 package com.github.NuclearDonut47.AlathraFishing.rewards;
 
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLoot;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLootManager;
 import com.github.NuclearDonut47.AlathraFishing.items.Loot;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFish;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -30,14 +30,14 @@ public class RewardGenerator {
 
     private final Plugin plugin;
     private final Config config;
-    private final CustomTools tools;
+    private final CustomToolsManager tools;
     private final ArrayList<String> validFreshwaterBiomes = new ArrayList<>();
     private final ArrayList<String> validSaltwaterBiomes = new ArrayList<>();
     private final ArrayList<Loot> customLoot = new ArrayList<>();
     private final Random random = new Random();
 
-    public RewardGenerator(Plugin plugin, Config config, CustomTools tools, CustomFish customFish,
-                           CustomMiscLoot miscLoot) {
+    public RewardGenerator(Plugin plugin, Config config, CustomToolsManager tools, CustomFishManager customFish,
+                           CustomMiscLootManager miscLoot) {
         this.plugin = plugin;
         this.config = config;
         this.tools = tools;

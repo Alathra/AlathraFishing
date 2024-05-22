@@ -112,20 +112,16 @@ public class Fish extends Loot {
 
         NamespacedKey idKey = new NamespacedKey(plugin, "identifier");
         NamespacedKey rarityKey = new NamespacedKey(plugin, "rarity");
-        NamespacedKey lengthKey = new NamespacedKey(plugin, "length");
-        NamespacedKey lengthDisplayed = new NamespacedKey(plugin, "lengthDisplayed");
 
         fishMeta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, identifier);
         fishMeta.getPersistentDataContainer().set(rarityKey, PersistentDataType.STRING, rarity);
-        fishMeta.getPersistentDataContainer().set(lengthKey, PersistentDataType.STRING, generateLength() + " cm");
-        fishMeta.getPersistentDataContainer().set(lengthDisplayed, PersistentDataType.BOOLEAN, false);
 
         fish.setItemMeta(fishMeta);
 
         return fish;
     }
 
-    public double generateLength() {
+    private double generateLength() {
         double distLoc = random.nextDouble();
         double tally = 0;
         int loc = 0;
@@ -151,6 +147,10 @@ public class Fish extends Loot {
 
             loc++;
         }
+    }
+
+    public String generateLengthString() {
+        return generateLength() + " cm";
     }
 
     public int getModel() {

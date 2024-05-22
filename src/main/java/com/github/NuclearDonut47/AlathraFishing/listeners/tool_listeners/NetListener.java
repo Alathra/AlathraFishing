@@ -2,7 +2,7 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.schedulers.NetFishingEvent;
 import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import com.github.milkdrinkers.colorparser.ColorParser;
@@ -79,7 +79,7 @@ public class NetListener extends ToolUseListener {
     private static final ArrayList<NetFishingEvent> activeNetTasks = new ArrayList<>();
     private static final Random random = new Random();
 
-    public NetListener(AlathraFishing plugin, CustomTools tools, RewardGenerator rewardGeneratorInstance) {
+    public NetListener(AlathraFishing plugin, CustomToolsManager tools, RewardGenerator rewardGeneratorInstance) {
         super(plugin, tools);
         rewardGenerator = rewardGeneratorInstance;
     }

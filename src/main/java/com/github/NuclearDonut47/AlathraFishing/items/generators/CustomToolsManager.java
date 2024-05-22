@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CustomTools {
+public class CustomToolsManager {
     private static Plugin plugin;
     private static final String[] defaultToolPaths = {"net", "custom_fishing_rod"};
     private static final ArrayList<Material> baseItems =
@@ -30,7 +30,7 @@ public class CustomTools {
     private static final HashMap<Material, Integer> vanillaConversions = new HashMap<>();
     private static NamespacedKey vanillaKey;
 
-    public CustomTools(Plugin pluginInstance, Config config) {
+    public CustomToolsManager(Plugin pluginInstance, Config config) {
         plugin = pluginInstance;
         ConfigurationSection toolsSection = config.getToolsSection();
         ConfigurationSection vanillaSection = config.getVanillaSection();

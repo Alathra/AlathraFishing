@@ -1,7 +1,7 @@
 package com.github.NuclearDonut47.AlathraFishing.recipes;
 
 import com.github.NuclearDonut47.AlathraFishing.config.Config;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -15,9 +15,9 @@ import java.util.List;
 public final class Recipes {
     private static RecipeBuilder recipeBuilder;
     private static ConfigurationSection recipesSection;
-    private static CustomTools tools;
+    private static CustomToolsManager tools;
 
-    public Recipes(Plugin plugin, Config config, CustomTools toolsInstance) {
+    public Recipes(Plugin plugin, Config config, CustomToolsManager toolsInstance) {
         recipeBuilder = new RecipeBuilder(plugin);
         recipesSection = config.getRecipesSection();
         tools = toolsInstance;

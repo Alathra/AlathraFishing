@@ -7,11 +7,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
-public class CustomMiscLoot {
+public class CustomMiscLootManager {
     private final static ArrayList<MiscLoot> miscLoot = new ArrayList<>();
     private final static String defaultMessage = "Default value(s) is (are) being used.";
 
-    public CustomMiscLoot(Plugin plugin, Config config) {
+    public CustomMiscLootManager(Plugin plugin, Config config) {
         ConfigurationSection miscLootSection = config.getMiscLootSection();
 
         if (miscLootSection == null)

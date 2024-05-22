@@ -2,7 +2,7 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomTools;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsManager;
 import com.github.ipecter.rtu.biomelib.RTUBiomeLib;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -16,7 +16,7 @@ import static org.bukkit.event.player.PlayerFishEvent.State;
 public class AnglingListener extends ToolUseListener {
     private final RewardGenerator rewardGenerator;
 
-    public AnglingListener(AlathraFishing plugin, CustomTools tools, RewardGenerator rewardGeneratorInstance) {
+    public AnglingListener(AlathraFishing plugin, CustomToolsManager tools, RewardGenerator rewardGeneratorInstance) {
         super(plugin, tools);
         rewardGenerator = rewardGeneratorInstance;
     }
@@ -41,7 +41,7 @@ public class AnglingListener extends ToolUseListener {
         boolean openWater = anglingEvent.getHook().isInOpenWater();
 
         ItemStack reward = rewardGenerator.giveReward(false,
-                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), true);
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
 
         if (reward == null) {
             reward = new ItemStack(Material.AIR);
@@ -56,8 +56,10 @@ public class AnglingListener extends ToolUseListener {
     private void vanillaAngling(PlayerFishEvent anglingEvent) {
         if (anglingEvent.getState() != State.CAUGHT_FISH) return;
 
+        boolean openWater = anglingEvent.getHook().isInOpenWater();
+
         ItemStack reward = rewardGenerator.giveReward(true,
-                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), true);
+                RTUBiomeLib.getInterface().getBiomeName(anglingEvent.getHook().getLocation()), openWater);
 
         if (reward == null) {
             reward = new ItemStack(Material.AIR);

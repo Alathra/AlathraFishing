@@ -7,11 +7,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
-public class CustomFish {
+public class CustomFishManager {
     private final static ArrayList<Fish> fish = new ArrayList<>();
     private final static String defaultMessage = "Default value(s) is (are) being used.";
 
-    public CustomFish(Plugin plugin, Config config) {
+    public CustomFishManager(Plugin plugin, Config config) {
         ConfigurationSection fishSection = config.getFishSection();
 
         if (fishSection == null)

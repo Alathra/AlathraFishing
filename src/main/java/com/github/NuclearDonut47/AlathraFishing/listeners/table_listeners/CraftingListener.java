@@ -1,13 +1,20 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
+import com.github.NuclearDonut47.AlathraFishing.items.Fish;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.CraftingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,51 +23,110 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
 public class CraftingListener extends AlathraFishingListener {
-    public CraftingListener(AlathraFishing plugin) {
+    private static CustomFishManager customFishManager;
+
+    public CraftingListener(AlathraFishing plugin, CustomFishManager customFishManagerInstance) {
         super(plugin);
+        customFishManager = customFishManagerInstance;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
-    public void addOrHidLength(PrepareItemCraftEvent craftEvent) {
+    public void editResultDisplayLore(PrepareItemCraftEvent craftEvent) {
         CraftingRecipe recipe = (CraftingRecipe) craftEvent.getRecipe();
 
-        if (!(recipe.getKey().toString().equals("salmonLength") || recipe.getKey().toString().equals("codLength"))) {
+        if (recipe == null) return;
+
+        if (!(recipe.getKey().toString().equals("alathrafishing:salmonlength") ||
+                recipe.getKey().toString().equals("alathrafishing:codlength"))) {
             return;
         }
 
-        NamespacedKey lengthDisplayed = new NamespacedKey(plugin, "lengthDisplayed");
-        NamespacedKey length = new NamespacedKey(plugin, "length");
+        ItemStack input = null;
+        NamespacedKey identifierKey = new NamespacedKey(plugin, "identifier");
 
-        if (craftEvent.getInventory().getResult().getItemMeta().getPersistentDataContainer()
-                .get(lengthDisplayed, PersistentDataType.BOOLEAN)) {
-            ItemStack result = craftEvent.getInventory().getResult();
+        for (ItemStack item : craftEvent.getInventory().getMatrix()) {
+            if (item != null) {
+                input = item;
 
-            ItemMeta resultMeta = result.getItemMeta();
+                break;
+            }
+        }
 
-            List<Component> resultLore = resultMeta.lore();
+        if (input == null) return;
 
-            resultMeta.lore(List.of(resultLore.get(0), resultLore.get(2)));
+        Fish thisFish = null;
 
-            result.setItemMeta(resultMeta);
+        for (Fish fish : customFishManager.getFish()) {
+            if (fish.getIdentifier().equals(input.getItemMeta().getPersistentDataContainer()
+                    .get(identifierKey, PersistentDataType.STRING))) {
+                thisFish = fish;
 
-            craftEvent.getInventory().setResult(result);
+                break;
+            }
+        }
+
+        if (thisFish == null) {
+            craftEvent.getInventory().setResult(new ItemStack(Material.AIR));
 
             return;
         }
+
+        ItemMeta newResultMeta = input.getItemMeta();
+
+        List<Component> resultLore = newResultMeta.lore();
+
+        if (resultLore.size() != 2) {
+            craftEvent.getInventory().setResult(new ItemStack(Material.AIR));
+
+            return;
+        }
+
+        newResultMeta.lore(List.of(resultLore.get(0), ColorParser.of("xxx.x cm").build(),
+                resultLore.get(1)));
 
         ItemStack result = craftEvent.getInventory().getResult();
 
-        ItemMeta resultMeta = result.getItemMeta();
-
-        List<Component> resultLore = resultMeta.lore();
-
-        resultMeta.lore(List.of(resultLore.get(0),
-                ColorParser.of(
-                        resultMeta.getPersistentDataContainer().get(length, PersistentDataType.STRING)).build(),
-                resultLore.get(1)));
-
-        result.setItemMeta(resultMeta);
+        result.setItemMeta(newResultMeta);
 
         craftEvent.getInventory().setResult(result);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
+    public void applyLength(InventoryClickEvent clickEvent) {
+        if (!((clickEvent.getClickedInventory()) instanceof CraftingInventory)) return;
+
+        if (!(clickEvent.getAction() == InventoryAction.PICKUP_ALL)) return;
+
+        if(!(clickEvent.getSlotType() == InventoryType.SlotType.RESULT)) return;
+
+        plugin.getLogger().info("checks passed");
+
+        CraftingInventory craftingInventory = (CraftingInventory) clickEvent.getClickedInventory();
+
+        ItemStack result = craftingInventory.getResult();
+        NamespacedKey identifierKey = new NamespacedKey(plugin, "identifier");
+        Fish thisFish = null;
+
+        for (Fish fish : customFishManager.getFish()) {
+            if (fish.getIdentifier().equals(result.getItemMeta().getPersistentDataContainer()
+                    .get(identifierKey, PersistentDataType.STRING))) {
+                thisFish = fish;
+
+                break;
+            }
+        }
+
+        if (thisFish == null) return;
+
+        ItemMeta newResultMeta = result.getItemMeta();
+
+        List<Component> resultLore = newResultMeta.lore();
+
+        newResultMeta.lore(List.of(resultLore.get(0),
+                ColorParser.of(thisFish.generateLengthString() + " cm").build(), resultLore.get(2)));
+
+        result.setItemMeta(newResultMeta);
+
+        clickEvent.setCurrentItem(result);
     }
 }

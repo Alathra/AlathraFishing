@@ -2,7 +2,7 @@ package com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.items.Fish;
-import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFish;
+import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public final class SmeltListener extends AlathraFishingListener {
-    private static CustomFish fish;
+    private static CustomFishManager fish;
 
-    public SmeltListener(AlathraFishing plugin, CustomFish fishInstance) {
+    public SmeltListener(AlathraFishing plugin, CustomFishManager fishInstance) {
         super(plugin);
         fish = fishInstance;
     }
