@@ -47,10 +47,11 @@ public final class AnvilListener extends AlathraFishingListener {
         if (!invalidSecondItem) tools.convertVanillaTool(anvil.getSecondItem(), secondModel);
 
         boolean nonVanillaToolPresent = !anvil.getFirstItem().getItemMeta().getPersistentDataContainer()
-                .get(tools.getVanillaKey(), PersistentDataType.BOOLEAN);
+                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, false);
 
         if (!anvil.getSecondItem().getItemMeta().getPersistentDataContainer()
-                .get(tools.getVanillaKey(), PersistentDataType.BOOLEAN)) nonVanillaToolPresent = true;
+                .getOrDefault(tools.getVanillaKey(), PersistentDataType.BOOLEAN, false))
+            nonVanillaToolPresent = true;
 
         if (!nonVanillaToolPresent) return;
 

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.NuclearDonut47.AlathraFishing"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
 
 java {
