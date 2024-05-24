@@ -32,9 +32,7 @@ public class CraftingListener extends AlathraFishingListener {
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void editResultDisplayLore(PrepareItemCraftEvent craftEvent) {
-        CraftingRecipe recipe = (CraftingRecipe) craftEvent.getRecipe();
-
-        if (recipe == null) return;
+        if (!(craftEvent.getRecipe() instanceof CraftingRecipe recipe)) return;
 
         if (!(recipe.getKey().toString().equals("alathrafishing:salmonlength") ||
                 recipe.getKey().toString().equals("alathrafishing:codlength"))) {
@@ -95,15 +93,14 @@ public class CraftingListener extends AlathraFishingListener {
     public void applyLength(InventoryClickEvent clickEvent) {
         if (!((clickEvent.getClickedInventory()) instanceof CraftingInventory)) return;
 
-        if (!(clickEvent.getAction() == InventoryAction.PICKUP_ALL)) return;
-
         if(!(clickEvent.getSlotType() == InventoryType.SlotType.RESULT)) return;
-
-        plugin.getLogger().info("checks passed");
 
         CraftingInventory craftingInventory = (CraftingInventory) clickEvent.getClickedInventory();
 
         ItemStack result = craftingInventory.getResult();
+
+        if (result == null) return;
+
         NamespacedKey identifierKey = new NamespacedKey(plugin, "identifier");
         Fish thisFish = null;
 
@@ -118,6 +115,11 @@ public class CraftingListener extends AlathraFishingListener {
 
         if (thisFish == null) return;
 
+        if (!(clickEvent.getAction() == InventoryAction.PICKUP_ALL)) {
+            clickEvent.setCancelled(true);
+            return;
+        }
+
         ItemMeta newResultMeta = result.getItemMeta();
 
         List<Component> resultLore = newResultMeta.lore();
@@ -128,5 +130,38 @@ public class CraftingListener extends AlathraFishingListener {
         result.setItemMeta(newResultMeta);
 
         clickEvent.setCurrentItem(result);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
+    public void disableCraftingRepair(PrepareItemCraftEvent craftEvent) {
+        boolean otherItemsPresent = false;
+        int fishingRodItems = 0;
+
+        for (ItemStack item : craftEvent.getInventory().getMatrix()) {
+            if (item == null) continue;
+
+            if (item.getType() == Material.FISHING_ROD) {
+                fishingRodItems++;
+                continue;
+            }
+
+            otherItemsPresent = true;
+        }
+
+        if (otherItemsPresent) return;
+
+        if (fishingRodItems != 2) return;
+
+        for (ItemStack item : craftEvent.getInventory().getMatrix()) {
+            if (item == null) continue;
+
+            if (item.getType() != Material.FISHING_ROD) continue;
+
+            if (item.getItemMeta().hasCustomModelData()) {
+                craftEvent.getInventory().setResult(new ItemStack(Material.AIR));
+
+                return;
+            }
+        }
     }
 }

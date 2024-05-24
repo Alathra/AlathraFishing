@@ -100,6 +100,8 @@ public class NetListener extends ToolUseListener {
 
         netEvent.setCancelled(true);
 
+        if (netEvent.getPlayer().isUnderWater()) return;
+
         NetFishingEvent existingTask = netFishingCheck(netEvent.getPlayer());
 
         if (existingTask == null) {

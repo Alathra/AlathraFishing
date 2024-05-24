@@ -3,7 +3,7 @@ package com.github.NuclearDonut47.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLootManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.CraftingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.SmeltListener;
-import com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners.MendingRemovalListener;
+import com.github.NuclearDonut47.AlathraFishing.listeners.MendingRemovalListener;
 import com.github.NuclearDonut47.AlathraFishing.rewards.RewardGenerator;
 import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomFishManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;

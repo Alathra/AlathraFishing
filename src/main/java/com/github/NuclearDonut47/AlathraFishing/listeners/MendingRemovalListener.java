@@ -1,4 +1,4 @@
-package com.github.NuclearDonut47.AlathraFishing.listeners.tool_listeners;
+package com.github.NuclearDonut47.AlathraFishing.listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
 import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
