@@ -9,14 +9,16 @@ import com.github.milkdrinkers.colorparser.ColorParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -86,15 +88,18 @@ public class NetListener extends ToolUseListener {
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void netListener(PlayerInteractEvent netEvent) {
-        if (netEvent.getHand() != EquipmentSlot.HAND) return;
-
         if (netEvent.getAction().isLeftClick()) return;
         // API is broken at time of writing.
         // Listener will trip twice, once for right-click, once for left-click.
         // This only happens for right-clicking.
         // Left-clicking will trip event for two left-clicks.
 
-        if (!customToolCheck(0, netEvent.getItem())) return;
+        if (invalidToolCheck(0, netEvent.getItem())) return;
+
+        if (netEvent.getHand() != EquipmentSlot.HAND) {
+            netEvent.setCancelled(true);
+            return;
+        }
 
         if (checkInteractable(netEvent.getClickedBlock())) return;
 
@@ -122,7 +127,7 @@ public class NetListener extends ToolUseListener {
         if (!(clickEvent.getAction() == InventoryAction.PICKUP_ALL) ||
                 (clickEvent.getAction() == InventoryAction.PICKUP_HALF)) return;
 
-        if (!(customToolCheck(0, clickEvent.getCurrentItem()))) return;
+        if (invalidToolCheck(0, clickEvent.getCurrentItem())) return;
 
         if (!(clickEvent.getWhoClicked() instanceof Player)) return;
 
@@ -134,18 +139,31 @@ public class NetListener extends ToolUseListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
-    public void midNetDrop(ItemSpawnEvent dropEvent) {
-        if (!(customToolCheck(0, dropEvent.getEntity().getItemStack()))) return;
+    public void midNetDrop(PlayerDropItemEvent dropEvent) {
+        if (invalidToolCheck(0, dropEvent.getItemDrop().getItemStack())) return;
 
-        Player player = Bukkit.getPlayer(dropEvent.getEntity().getThrower());
+        if (dropEvent.getItemDrop().getThrower() == null) return;
 
-        if (player == null) return;
+        if (Bukkit.getPlayer(dropEvent.getItemDrop().getThrower()) == null) return;
+
+        Player player = Bukkit.getPlayer(dropEvent.getItemDrop().getThrower());
 
         NetFishingEvent existingTask = netFishingCheck(player);
 
         if (existingTask == null) return;
 
-        cancelEvent(existingTask, dropEvent.getEntity().getItemStack());
+        cancelEvent(existingTask, dropEvent.getItemDrop().getItemStack());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
+    public void midNetSwapHands(PlayerSwapHandItemsEvent swapEvent) {
+        if (invalidToolCheck(0, swapEvent.getOffHandItem())) return;
+
+        NetFishingEvent existingTask = netFishingCheck(swapEvent.getPlayer());
+
+        if (existingTask == null) return;
+
+        cancelEvent(existingTask, swapEvent.getOffHandItem());
     }
 
     private boolean checkInteractable(Block block) {
@@ -203,32 +221,36 @@ public class NetListener extends ToolUseListener {
 
         cancelEvent(netFishingEvent, pullEvent.getItem());
 
-        if (netFishingEvent.isFishCatchable()) {
-            Location nettingLocation = netFishingEvent.getNettingLocation();
-            Location playerLocation = pullEvent.getPlayer().getLocation();
-            int lootAmount = random.nextInt(1, 6);
-
-            playerLocation.add(0, 2, 0);
-
-            for (int a = 0; a < lootAmount; a++) {
-                ItemStack reward = rewardGenerator.giveReward(true,
-                        RTUBiomeLib.getInterface().getBiomeName(nettingLocation), true);
-
-                if (reward == null) return;
-
-                Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
-
-                Vector velocity = new Vector(2 * ((playerLocation.getX() - nettingLocation.getX()) / 20),
-                        (2 * (playerLocation.getY() - nettingLocation.getY()) / 20),
-                        (2 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
-
-                rewardDrop.setVelocity(velocity);
-            }
-
+        if (!netFishingEvent.isFishCatchable()) {
+            pullEvent.getPlayer().sendMessage(failMessage);
             return;
         }
 
-        pullEvent.getPlayer().sendMessage(failMessage);
+        Location nettingLocation = netFishingEvent.getNettingLocation();
+        Location playerLocation = pullEvent.getPlayer().getLocation();
+        int lootAmount = random.nextInt(1, 6);
+
+        playerLocation.add(0, 2, 0);
+
+        for (int a = 0; a < lootAmount; a++) {
+            ItemStack reward = rewardGenerator.giveReward(true,
+                    RTUBiomeLib.getInterface().getBiomeName(nettingLocation), true);
+
+            if (reward == null) return;
+
+            Item rewardDrop = pullEvent.getPlayer().getWorld().dropItem(nettingLocation, reward);
+
+            Vector velocity = new Vector(2 * ((playerLocation.getX() - nettingLocation.getX()) / 20),
+                    (2 * (playerLocation.getY() - nettingLocation.getY()) / 20),
+                    (2 * (playerLocation.getZ() - nettingLocation.getZ()) / 20));
+
+            rewardDrop.setVelocity(velocity);
+        }
+
+        playerLocation.add(0, 2, 0);
+
+        playerLocation.getWorld().spawn(playerLocation, ExperienceOrb.class)
+                .setExperience(random.nextInt(1, 7));
     }
 
     public void cancelEvent(NetFishingEvent existingTask, ItemStack item) {

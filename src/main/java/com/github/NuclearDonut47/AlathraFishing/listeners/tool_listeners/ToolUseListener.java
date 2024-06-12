@@ -18,10 +18,10 @@ public abstract class ToolUseListener extends AlathraFishingListener {
         tools = toolsInstance;
     }
 
-    protected final boolean customToolCheck(int index, ItemStack item) {
-        if (item == null) return false;
+    protected final boolean invalidToolCheck(int index, ItemStack item) {
+        if (item == null) return true;
 
-        if (item.getType() != tools.getBaseItems().get(index)) return false;
+        if (item.getType() != tools.getBaseItems().get(index)) return true;
 
         int itemModel = 0;
 
@@ -30,7 +30,7 @@ public abstract class ToolUseListener extends AlathraFishingListener {
 
         tools.convertVanillaTool(item, itemModel);
 
-        return tools.getModelOverrides().get(index) == itemModel;
+        return tools.getModelOverrides().get(index) != itemModel;
     }
 
     protected void damageTool(ItemStack item, Player player, int index) {

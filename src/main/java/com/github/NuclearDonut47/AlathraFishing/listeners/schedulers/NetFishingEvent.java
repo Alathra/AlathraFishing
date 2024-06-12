@@ -18,7 +18,7 @@ public final class NetFishingEvent extends BukkitRunnable {
     private final Player player;
     private final Location nettingLocation;
     private final ArrayList<Location> nettingArea = new ArrayList<>();
-    private final int waitTime;
+    private int waitTime;
     private int count;
     private int stopCount;
     private final Random random = new Random();
@@ -57,9 +57,12 @@ public final class NetFishingEvent extends BukkitRunnable {
                     nettingLocation.getY() + yAdjust,
                     nettingLocation.getZ() + zAdjust);
 
-            if (spotCandidate.getBlock().getType() == Material.WATER) {
-                nettingArea.add(spotCandidate.add(0, -yAdjust, 0));
-            }
+            if (spotCandidate.getBlock().getType() != Material.WATER) continue;
+
+            spotCandidate.add(0, -(2 * yAdjust), 0);
+
+            if (spotCandidate.getBlock().getType() == Material.AIR)
+                nettingArea.add(spotCandidate.add(0, yAdjust, 0));
         }
     }
 
@@ -124,6 +127,7 @@ public final class NetFishingEvent extends BukkitRunnable {
         if (count >= (waitTime + 60)) {
             count = 0;
             fishCatchable = false;
+            waitTime = 20 * random.nextInt(5, 30);
             player.sendMessage(timeoutMessage);
         }
     }
@@ -159,8 +163,8 @@ public final class NetFishingEvent extends BukkitRunnable {
         stopCount = count + 20;
     }
 
-    public boolean isPlayer(Player testPlayer) {
-        return player == testPlayer;
+    public boolean isPlayer(Player checkPlayer) {
+        return player == checkPlayer;
     }
 
     public boolean isFishCatchable() {

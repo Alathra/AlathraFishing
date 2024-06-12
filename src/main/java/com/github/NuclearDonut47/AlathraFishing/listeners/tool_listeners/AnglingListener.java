@@ -23,14 +23,14 @@ public class AnglingListener extends ToolUseListener {
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void anglingFishing(PlayerFishEvent anglingEvent) {
-        if (!customToolCheck(1, anglingEvent.getPlayer().getInventory().getItemInMainHand())) {
+        if (invalidToolCheck(1, anglingEvent.getPlayer().getInventory().getItemInMainHand())) {
             vanillaAngling(anglingEvent);
             return;
         }
 
         if (anglingEvent.getState() == State.FISHING) {
-            anglingEvent.getHook().setMinWaitTime(20*5);
-            anglingEvent.getHook().setMaxWaitTime(20*30);
+            anglingEvent.getHook().setMinWaitTime(20 * 5);
+            anglingEvent.getHook().setMaxWaitTime(20 * 30);
             return;
         }
 

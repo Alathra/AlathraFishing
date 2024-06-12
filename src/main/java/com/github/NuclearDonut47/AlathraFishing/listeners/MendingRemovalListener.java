@@ -1,7 +1,6 @@
 package com.github.NuclearDonut47.AlathraFishing.listeners;
 
 import com.github.NuclearDonut47.AlathraFishing.AlathraFishing;
-import com.github.NuclearDonut47.AlathraFishing.listeners.AlathraFishingListener;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -17,9 +16,9 @@ public class MendingRemovalListener extends AlathraFishingListener {
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
     public void removeMending(PlayerFishEvent fishEvent) {
-        Item itemEntity = (Item) fishEvent.getCaught();
+        if (!(fishEvent.getCaught() instanceof Item itemEntity)) return;
 
-        if (itemEntity == null) return;
+        if (itemEntity.getItemStack().getItemMeta() == null) return;
 
         if (itemEntity.getItemStack().getItemMeta().getEnchants().isEmpty()) return;
 

@@ -35,10 +35,12 @@ public final class SmeltListener extends AlathraFishingListener {
 
         if (name == null) return;
 
-        boolean validModel = !smeltEvent.getSource().getItemMeta().hasCustomModelData();
+        if (!smeltEvent.getSource().getItemMeta().hasCustomModelData()) return;
+
+        boolean validModel = false;
 
         for (Fish fish : fish.getFish()) {
-            if (fish.getModel() == smeltEvent.getResult().getItemMeta().getCustomModelData()) {
+            if (fish.getModel() == smeltEvent.getSource().getItemMeta().getCustomModelData()) {
                 validModel = true;
                 break;
             }
