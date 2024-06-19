@@ -1,5 +1,6 @@
 package com.github.NuclearDonut47.AlathraFishing;
 
+import com.github.NuclearDonut47.AlathraFishing.config.ConfigManager;
 import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomMiscLootManager;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.CraftingListener;
 import com.github.NuclearDonut47.AlathraFishing.listeners.table_listeners.SmeltListener;
@@ -25,7 +26,6 @@ import com.github.NuclearDonut47.AlathraFishing.items.generators.CustomToolsMana
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
 public class AlathraFishing extends JavaPlugin {
     private void initHooks(Config config) {
         // Check if the server is running Citizens, init citizens related classes
@@ -42,6 +42,8 @@ public class AlathraFishing extends JavaPlugin {
 
         FileConfiguration fileConfig = this.getConfig();
         Config config = new Config(this, fileConfig);
+
+        new ConfigManager(this);
 
         CustomToolsManager tools = new CustomToolsManager(this, config);
         CustomFishManager fishManager = new CustomFishManager(this, config);

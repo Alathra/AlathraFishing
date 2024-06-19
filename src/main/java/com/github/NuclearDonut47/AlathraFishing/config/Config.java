@@ -38,6 +38,54 @@ public final class Config {
         vanillaBiomesSection = configInstance.getConfigurationSection("vanilla_biomes");
     }
 
+    static void initConfig(AlathraFishing alathraFishing) {
+        plugin = alathraFishing;
+        plugin.saveDefaultConfig();
+        config = plugin.getConfig();
+
+        if (!upToDateVersion()) plugin.saveConfig();
+    }
+
+    private static boolean upToDateVersion() {
+        String configVersionString = config.getString("version");
+
+        if (configVersionString == null) {
+            updateConfigVersion();
+
+            return false;
+        }
+
+        try {
+            //noinspection UnstableApiUsage
+            if (configVersionString.equals(plugin.getPluginMeta().getVersion())) {
+                plugin.getLogger().info("Plugin config up to date.");
+
+                return true;
+            }
+
+            updateConfigVersion();
+
+            return false;
+        } catch (Exception e) {
+            plugin.getLogger().info("JavaPlugin.getPluginMeta() and PluginMeta.getVersion() no longer work. " +
+                    "AlathraFishing is initializing assuming that the config is up to date.");
+        }
+
+        return true;
+    }
+
+    private static void updateConfigVersion() {
+        try {
+            plugin.getLogger().info("Plugin config out of date. Updating now.");
+
+            //noinspection UnstableApiUsage
+            config.set("version", plugin.getPluginMeta().getVersion());
+        } catch (Exception e) {
+            plugin.getLogger().info("JavaPlugin.getPluginMeta() and PluginMeta.getVersion() no longer work. " +
+                    "AlathraFishing is initializing assuming that the config is up to date.");
+        }
+    }
+
     public void reloadConfig() {
         plugin.reloadConfig();
         plugin.saveDefaultConfig();

@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,7 +23,7 @@ public final class SmeltListener extends AlathraFishingListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST) @SuppressWarnings("unused")
-    public void nameChange(FurnaceSmeltEvent smeltEvent) {
+    public void nameChange(BlockCookEvent smeltEvent) {
         Component name = null;
 
         if (smeltEvent.getResult().getType() == Material.COOKED_SALMON) {
